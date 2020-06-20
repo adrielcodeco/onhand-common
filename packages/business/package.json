@@ -18,7 +18,7 @@
   "scripts": {
     "build": "rimraf lib && ttsc -b tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "jest --coverage"
+    "test": "jest --coverage && codecov"
   },
   "bugs": {
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
@@ -30,6 +30,7 @@
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.13",
     "@zerollup/ts-transform-paths": "^1.7.18",
+    "codecov": "^3.7.0",
     "jest": "^26.0.1",
     "ts-jest": "^26.1.0",
     "ttypescript": "^1.5.10",

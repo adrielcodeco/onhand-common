@@ -1,0 +1,38 @@
+coverage:
+  status:
+    patch:
+      default:
+        # Ensure % of code is covered
+        target: 90%
+    project:
+      default:
+        # auto compares coverage to the previous base commit
+        target: auto
+        # adjust accordingly based on how flaky your tests are
+        # this allows a 10% drop from the previous base commit coverage
+        threshold: 10%
+parsers:
+  javascript:
+    enable_partials: yes
+comment:
+  layout: diff, flags, files
+  require_changes: true
+flags:
+  "@onhand/common-business":
+    paths: 
+      - packages/business/
+  "@onhand/common-business-aws":
+    paths: 
+      - packages/business-aws/
+  "@onhand/common-controller":
+    paths: 
+      - packages/controller/
+  "@onhand/common-framework":
+    paths: 
+      - packages/framework/
+  "@onhand/common-framework-aws":
+    paths: 
+      - packages/framework-aws/
+  "@onhand/jsend":
+    paths: 
+      - packages/jsend/
