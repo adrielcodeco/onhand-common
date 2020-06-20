@@ -1,0 +1,78 @@
+{
+  "name": "@onhand/common-framework",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Codeco <adrielcodeco@hotmail.com>",
+  "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/framework#readme",
+  "license": "ISC",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrielcodeco/onhand-common.git"
+  },
+  "scripts": {
+    "build": "rimraf lib && ttsc -b tsconfig.build.json",
+    "test": "jest --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "bugs": {
+    "url": "https://github.com/adrielcodeco/onhand-common/issues"
+  },
+  "dependencies": {
+    "@onhand/common-business": "^0.0.0",
+    "axios": "^0.19.2",
+    "class-validator": "^0.12.2",
+    "cls-hooked": "^4.2.2",
+    "inversify": "^5.0.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.26.0",
+    "node-cache": "^5.1.1",
+    "reflect-metadata": "^0.1.13",
+    "short-uuid": "^3.1.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/lodash": "^4.14.155",
+    "@types/node": "^14.0.13",
+    "@types/node-cache": "^4.2.5",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "jest": "^26.0.1",
+    "ttypescript": "^1.5.10",
+    "typescript": "^3.9.5"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    },
+    "moduleNameMapper": {
+      "^#/(.*)$": "<rootDir>/src/$1",
+      "^$/(.*)$": "<rootDir>/tests/$1"
+    },
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "./tests/.+.ts$",
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "coverageReporters": [
+      "lcov"
+    ]
+  }
+}

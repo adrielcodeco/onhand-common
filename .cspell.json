@@ -1,0 +1,31 @@
+{
+  "version": "0.1",
+  "language": "en",
+  "ignorePaths": [
+    ".cspell.json",
+    "**/node_modules/**",
+    "*.d.ts",
+    "**/lib/**",
+    "**/coverage/**",
+    "**/tests/**"
+  ],
+  "dictionaries": [
+    "typescript",
+    "softwareTerms",
+    "node",
+    "en_US",
+    "npm",
+    "misc",
+    "filetypes",
+    "bash"
+  ],
+  "words": [
+    "onhand",
+    "inversify",
+    "emerg",
+    "consts",
+    "PARAMETERSTOREENDPOINT",
+    "printf",
+    "jsend"
+  ]
+}

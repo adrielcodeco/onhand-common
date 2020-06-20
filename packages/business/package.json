@@ -1,0 +1,67 @@
+{
+  "name": "@onhand/common-business",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Codeco <adrielcodeco@hotmail.com>",
+  "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/business#readme",
+  "license": "ISC",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrielcodeco/onhand-common.git"
+  },
+  "scripts": {
+    "build": "rimraf lib && ttsc -b tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "jest --coverage"
+  },
+  "bugs": {
+    "url": "https://github.com/adrielcodeco/onhand-common/issues"
+  },
+  "dependencies": {
+    "inversify": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.13",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0",
+    "ttypescript": "^1.5.10",
+    "typescript": "^3.9.5"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    },
+    "moduleNameMapper": {
+      "^#/(.*)$": "<rootDir>/src/$1",
+      "^$/(.*)$": "<rootDir>/tests/$1"
+    },
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "./tests/.+.ts$",
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "coverageReporters": [
+      "lcov"
+    ]
+  }
+}

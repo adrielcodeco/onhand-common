@@ -1,0 +1,14 @@
+  
+{
+    "extends": ["config:base", ":semanticCommits"],
+    "baseBranches": ["master"],
+    "packageRules": [
+      {
+        "packagePatterns": ["*"],
+        "minor": {
+          "groupName": "all non-major dependencies",
+          "groupSlug": "all-minor-patch"
+        }
+      }
+    ]
+  }
