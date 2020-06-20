@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "rimraf lib && ttsc -b tsconfig.build.json",
-    "test": "jest --coverage && codecov -F @onhand/jsend",
+    "test": "jest --coverage && codecov -F @onhand/jsend -y ../../.codecov.yml",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "bugs": {
