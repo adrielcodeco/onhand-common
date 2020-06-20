@@ -1,5 +1,12 @@
 version: 2.1
 
+aliases:
+  - &attach_workspace
+      at: ~/project
+  - &persist_to_workspace
+      root: ~/project
+      paths: .
+
 defaults: &defaults
   docker:
     - image: circleci/node:latest
@@ -22,63 +29,52 @@ jobs:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
+            - node_modules
             - ~/.cache/yarn
-      - persist_to_workspace:
-          root: ~/project
-          paths: .
+      - persist_to_workspace: *persist_to_workspace
 
   build:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/project
+      - attach_workspace: *attach_workspace
       - run: yarn build
-      - persist_to_workspace:
-          root: ~/project
-          paths: .
+      - persist_to_workspace: *persist_to_workspace
 
   code-lint:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/project
+      - attach_workspace: *attach_workspace
       - run: yarn lint
 
   markdown-lint:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/project
+      - attach_workspace: *attach_workspace
       - run: yarn lint:markdown
 
   spell-check:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/project
+      - attach_workspace: *attach_workspace
       - run: yarn check:spelling
 
   typecheck:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/project
+      - attach_workspace: *attach_workspace
       - run: yarn typecheck
 
   test:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/project
+      - attach_workspace: *attach_workspace
       - run: yarn test
 
   publish:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/project
-      - run: echo "registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN" > ~/.yarnrc
-      - run: npm config set access public
+      - attach_workspace: *attach_workspace
+      - run: npm config set registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
       - run: yarn lerna:publish
 
 workflows:

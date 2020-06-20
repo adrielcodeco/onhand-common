@@ -1,7 +1,11 @@
 {
-  "version": "0.0.0",
+  "version": "1.0.0",
   "npmClient": "yarn",
+  "npmClientArgs": [
+    "--pure-lockfile"
+  ],
   "useWorkspaces": true,
   "stream": true,
+  "rejectCycles": "true",
   "packages": ["packages/*"]
 }
