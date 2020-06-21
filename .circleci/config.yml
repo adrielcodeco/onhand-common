@@ -78,13 +78,14 @@ jobs:
       - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
       - run: npm whoami
       - run: yarn lerna:publish
+      - run: yarn lerna run yarn:pack
+      - persist_to_workspace: *persist_to_workspace
 
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
     steps:
       - attach_workspace: *attach_workspace
-      - run: yarn lerna run yarn:pack
       - run:
           name: "Publish Release on GitHub"
           command: |
