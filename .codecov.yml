@@ -18,21 +18,21 @@ comment:
   layout: diff, flags, files
   require_changes: true
 flags:
-  "@onhand/common-business":
+  "onhand_common_business":
     paths: 
       - packages/business/
-  "@onhand/common-business-aws":
+  "onhand_common_business_aws":
     paths: 
       - packages/business-aws/
-  "@onhand/common-controller":
+  "onhand_common_controller":
     paths: 
       - packages/controller/
-  "@onhand/common-framework":
+  "onhand_common_framework":
     paths: 
       - packages/framework/
-  "@onhand/common-framework-aws":
+  "onhand_common_framework_aws":
     paths: 
       - packages/framework-aws/
-  "@onhand/jsend":
+  "onhand_jsend":
     paths: 
       - packages/jsend/

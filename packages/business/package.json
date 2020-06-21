@@ -18,7 +18,7 @@
   "scripts": {
     "build": "rimraf lib && ttsc -b tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "jest --coverage && codecov -F @onhand/common-business -y ../../.codecov.yml"
+    "test": "jest --coverage && codecov -F onhand_common_business -y ../../.codecov.yml"
   },
   "bugs": {
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
