@@ -28,3 +28,5 @@ OS Name:
 OS Version:
 NodeJS Version:
 Package Version:
+
+try run `lerna info` to get environment info
