@@ -69,6 +69,7 @@ jobs:
     steps:
       - attach_workspace: *attach_workspace
       - run: yarn test
+      - run: node_modules/.bin/codecov -y .codecov.yml
 
   publish:
     <<: *defaults
@@ -77,6 +78,18 @@ jobs:
       - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
       - run: npm whoami
       - run: yarn lerna:publish
+
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace: *attach_workspace
+      - run: lerna run yarn:pack
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            VERSION=$(my-binary --version)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./releases/
 
 workflows:
   build-and-publish:
@@ -111,3 +124,7 @@ workflows:
           filters:
             branches:
               only: master
+      - publish-github-release:
+          requires:
+            - publish
+

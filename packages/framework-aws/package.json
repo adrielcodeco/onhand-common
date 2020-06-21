@@ -17,8 +17,9 @@
   },
   "scripts": {
     "build": "rimraf lib && ttsc -b tsconfig.build.json",
-    "test": "jest --coverage && codecov -F onhand_common_framework_aws -y ../../.codecov.yml",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "test": "jest --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "yarn:pack": "yarn pack && cpy 'onhand-common-framework-aws-*.tgz' '../../releases'"
   },
   "bugs": {
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
@@ -45,6 +46,7 @@
     "@types/node-cache": "^4.2.5",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "codecov": "^3.7.0",
+    "cpy-cli": "^3.1.1",
     "jest": "^26.0.1",
     "ttypescript": "^1.5.10",
     "typescript": "^3.9.5"

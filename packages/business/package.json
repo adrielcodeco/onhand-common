@@ -18,7 +18,8 @@
   "scripts": {
     "build": "rimraf lib && ttsc -b tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "jest --coverage && codecov -F onhand_common_business -y ../../.codecov.yml"
+    "test": "jest --coverage",
+    "yarn:pack": "yarn pack && cpy 'onhand-common-business-*.tgz' '../../releases'"
   },
   "bugs": {
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
@@ -31,6 +32,7 @@
     "@types/node": "^14.0.13",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "codecov": "^3.7.0",
+    "cpy-cli": "^3.1.1",
     "jest": "^26.0.1",
     "ts-jest": "^26.1.0",
     "ttypescript": "^1.5.10",
