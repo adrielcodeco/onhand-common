@@ -92,10 +92,19 @@ jobs:
     steps:
       - attach_workspace: *attach_workspace
       - run:
-          name: "Publish Release on GitHub"
+          name: Publish Release on GitHub
           command: |
             VERSION=$(grep -Eo '"version": "[0-9\.]+' lerna.json | grep -Eo "[0-9\.]+")
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./releases/
+
+  tag-trigger:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace: *attach_workspace
+      - run:
+          name: ensure that is in the master branch
+          command: git branch -a --contains | grep -q -E '(^|\s)master$' || exit 1
 
 workflows:
   validations:
@@ -129,12 +138,16 @@ workflows:
             - typecheck
   publish:
     jobs:
+      - tag-trigger:
+          filters:
+            tags:
+              only: /^v.*/
       - init:
           filters:
             branches:
               only: master
-            tags:
-              only: /^v.*/
+          requires:
+            - tag-trigger
       - build:
           context: publish
           requires:
@@ -150,5 +163,5 @@ workflows:
             - publish
       - publish-github-release:
           requires:
-            - publish
+            - pack
 
