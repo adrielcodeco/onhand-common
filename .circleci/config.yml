@@ -138,20 +138,22 @@ workflows:
             - typecheck
   publish:
     jobs:
-      - tag-trigger:
+      - init:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
-      - init:
+      - tag-trigger:
           filters:
             branches:
               only: master
           requires:
-            - tag-trigger
+            - init
       - build:
           context: publish
           requires:
-            - init
+            - tag-trigger
       - publish:
           # type: approval
           context: publish
