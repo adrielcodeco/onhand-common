@@ -71,13 +71,21 @@ jobs:
       - run: yarn test
       - run: yarn codecov -y .codecov.yml
 
-  publish:
+  publish-canary:
     <<: *defaults
     steps:
       - attach_workspace: *attach_workspace
       - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
       - run: npm whoami
       - run: yarn lerna:publish
+
+  publish-release:
+    <<: *defaults
+    steps:
+      - attach_workspace: *attach_workspace
+      - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+      - run: npm whoami
+      - run: yarn lerna publish from-package --yes --loglevel=verbose
 
   pack:
     <<: *defaults
@@ -136,6 +144,10 @@ workflows:
             - markdown-lint
             - spell-check
             - typecheck
+      - publish-canary:
+          requires:
+            - test
+
   publish:
     jobs:
       - init:
@@ -154,7 +166,7 @@ workflows:
           context: publish
           requires:
             - tag-trigger
-      - publish:
+      - publish-release:
           # type: approval
           context: publish
           requires:
@@ -162,7 +174,7 @@ workflows:
       - pack:
           context: publish
           requires:
-            - publish
+            - publish-release
       - publish-github-release:
           requires:
             - pack
