@@ -78,6 +78,11 @@ jobs:
       - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
       - run: npm whoami
       - run: yarn lerna:publish
+
+  pack:
+    <<: *defaults
+    steps:
+      - attach_workspace: *attach_workspace
       - run: yarn lerna run yarn:pack
       - persist_to_workspace: *persist_to_workspace
 
@@ -89,13 +94,16 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            VERSION=$(my-binary --version)
+            VERSION=$(grep -Eo '"version": "[0-9\.]+' lerna.json | grep -Eo "[0-9\.]+")
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./releases/
 
 workflows:
-  build-and-publish:
+  validations:
     jobs:
-      - init
+      - init:
+          filters:
+            tags:
+              ignore: /^v.*/
       - build:
           requires:
             - init
@@ -119,12 +127,27 @@ workflows:
             - markdown-lint
             - spell-check
             - typecheck
-      - publish:
-          requires:
-            - test
+  publish:
+    jobs:
+      - init:
           filters:
             branches:
               only: master
+            tags:
+              only: /^v.*/
+      - build:
+          context: publish
+          requires:
+            - init
+      - publish:
+          # type: approval
+          context: publish
+          requires:
+            - build
+      - pack:
+          context: publish
+          requires:
+            - publish
       - publish-github-release:
           requires:
             - publish
