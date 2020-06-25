@@ -4,7 +4,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "version": "1.0.0",
   "description": "",
   "scripts": {
     "build": "lerna run build",

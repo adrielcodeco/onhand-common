@@ -1,0 +1,31 @@
+pull_request_rules:
+  - name: Automatic merge ⬇️ on approval ✔
+    conditions:
+      - "-merged"
+      - "-closed"
+      - "-locked"
+      - "#approved-reviews-by>=1"
+      - "-approved-reviews-by~=author"
+      - "status-success=validations"
+      - "status-success=codecov/patch"
+      - "status-success=codecov/project"
+      - "status-success=Semantic Pull Request"
+    actions:
+      merge:
+        method: rebase
+        strict: smart
+        strict_method: merge
+  - name: Automatic merge dependabot PR
+    conditions:
+      - "-merged"
+      - "-closed"
+      - "-locked"
+      - "status-success=validations"
+      - "status-success=codecov/patch"
+      - "status-success=codecov/project"
+      - "status-success=Semantic Pull Request"
+    actions:
+      merge:
+        method: rebase
+        strict: smart
+        strict_method: merge
