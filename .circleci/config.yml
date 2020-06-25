@@ -75,9 +75,6 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace: *attach_workspace
-      - run:
-          name: Skip this job for Pull Requests
-          command: '[[ -v CIRCLE_PR_NUMBER ]] && circleci step halt || true'
       - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
       - run: npm whoami
       - run: yarn lerna:publish
@@ -150,6 +147,9 @@ workflows:
             - spell-check
             - typecheck
       - publish-canary:
+          filters:
+            branches:
+              only: master
           requires:
             - test
 
