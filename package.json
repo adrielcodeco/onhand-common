@@ -77,22 +77,5 @@
       "pre-commit": "yarn validations",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional",
-      "@commitlint/config-lerna-scopes"
-    ],
-    "rules": {
-      "body-max-length": [
-        0
-      ],
-      "footer-max-length": [
-        0
-      ],
-      "header-max-length": [
-        0
-      ]
-    }
   }
 }
