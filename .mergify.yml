@@ -25,6 +25,7 @@ pull_request_rules:
       - "-conflict"
       - "-draft"
       - "author=dependabot[bot]"
+      - "#approved-reviews-by=0"
       - "status-success=validations"
       - "status-success=codecov/patch"
       - "status-success=codecov/project"
