@@ -14,7 +14,7 @@
     "generate:contributors": "yarn ts-node --transpile-only ./tools/generate-contributors.ts && yarn all-contributors generate",
     "help-me": "lerna-wizard",
     "lerna:init": "lerna bootstrap --ignore-scripts && lerna link --force-local",
-    "lerna:publish": "lerna publish --canary --yes --loglevel=verbose",
+    "lerna:publish": "lerna publish --canary --no-git-reset --force-publish --skip-git --yes --loglevel=verbose",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "lint:markdown:fix": "lint:markdown --fix",
     "lint:markdown": "markdownlint '**/*.md' --ignore-path=.markdownlintignore",
