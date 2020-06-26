@@ -4,6 +4,8 @@ pull_request_rules:
       - "-merged"
       - "-closed"
       - "-locked"
+      - "-conflict"
+      - "-draft"
       - "#approved-reviews-by>=1"
       - "-approved-reviews-by~=author"
       - "status-success=validations"
@@ -15,11 +17,30 @@ pull_request_rules:
         method: rebase
         strict: smart
         strict_method: merge
+  - name: Review for dependabot PR
+    conditions:
+      - "-merged"
+      - "-closed"
+      - "-locked"
+      - "-conflict"
+      - "-draft"
+      - "author=dependabot[bot]"
+      - "status-success=validations"
+      - "status-success=codecov/patch"
+      - "status-success=codecov/project"
+      - "status-success=Semantic Pull Request"
+    actions:
+      review:
+        type: APPROVE
   - name: Automatic merge dependabot PR
     conditions:
       - "-merged"
       - "-closed"
       - "-locked"
+      - "-conflict"
+      - "-draft"
+      - "author=dependabot[bot]"
+      - "#approved-reviews-by>=1"
       - "status-success=validations"
       - "status-success=codecov/patch"
       - "status-success=codecov/project"
