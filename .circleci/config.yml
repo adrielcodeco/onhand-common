@@ -160,9 +160,6 @@ workflows:
             tags:
               only: /^v.*/
       - tag-trigger:
-          filters:
-            branches:
-              only: master
           requires:
             - init
       - build:
