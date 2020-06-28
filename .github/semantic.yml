@@ -1,3 +1,3 @@
 titleAndCommits: true
-allowMergeCommits: false
+allowMergeCommits: true
 allowRevertCommits: false
