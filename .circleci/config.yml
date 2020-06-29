@@ -160,24 +160,39 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v.*/
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
       - tag-trigger:
           requires:
             - init
+          filters:
+            tags:
+              only: /^v.*/
       - build:
           context: publish
           requires:
             - tag-trigger
+          filters:
+            tags:
+              only: /^v.*/
       - publish-release:
           # type: approval
           context: publish
           requires:
             - build
+          filters:
+            tags:
+              only: /^v.*/
       - pack:
           context: publish
           requires:
             - publish-release
+          filters:
+            tags:
+              only: /^v.*/
       - publish-github-release:
           requires:
             - pack
+          filters:
+            tags:
+              only: /^v.*/
 
