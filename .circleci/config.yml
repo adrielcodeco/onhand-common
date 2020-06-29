@@ -157,8 +157,8 @@ workflows:
     jobs:
       - init:
           filters:
-            branches:
-              ignore: /.*/
+            # branches:
+            #   ignore: /.*/
             tags:
               only: /^v.*/
       - tag-trigger:
