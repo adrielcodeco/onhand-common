@@ -116,6 +116,10 @@ jobs:
           name: ensure that is in the master branch
           command: git branch -a --contains | grep -q -E '(^|\s)master$' || circleci step halt
 
+tagFilter: &tagFilter
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 workflows:
   validations:
     jobs:
@@ -157,42 +161,27 @@ workflows:
     jobs:
       - init:
           filters:
+            <<: *tagFilter
             branches:
               ignore: /.*/
-            tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
       - tag-trigger:
           requires:
             - init
-          filters:
-            tags:
-              only: /^v.*/
+          filters: *tagFilter
       - build:
-          context: publish
           requires:
             - tag-trigger
-          filters:
-            tags:
-              only: /^v.*/
+          filters: *tagFilter
       - publish-release:
-          # type: approval
-          context: publish
           requires:
             - build
-          filters:
-            tags:
-              only: /^v.*/
+          filters: *tagFilter
       - pack:
-          context: publish
           requires:
             - publish-release
-          filters:
-            tags:
-              only: /^v.*/
+          filters: *tagFilter
       - publish-github-release:
           requires:
             - pack
-          filters:
-            tags:
-              only: /^v.*/
+          filters: *tagFilter
 
