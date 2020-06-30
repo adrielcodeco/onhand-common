@@ -17,7 +17,7 @@ module.exports = {
       getPackages(ctx).then(packages => [
         2,
         'always',
-        packages.concat(['deps', 'deps-dev', 'ci', 'devops']),
+        packages.concat(['deps', 'deps-dev', 'ci', 'devops', 'release']),
       ]),
   },
 }

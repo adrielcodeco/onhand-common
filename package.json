@@ -22,7 +22,7 @@
     "postinstall": "yarn lerna:init && yarn build",
     "pre-commit": "yarn lint-staged",
     "pre-push": "yarn check:format",
-    "release": "lerna version path --force-publish",
+    "release": "lerna version patch --force-publish",
     "test": "lerna run test --concurrency 1",
     "typecheck": "lerna run typecheck",
     "validations": "yarn lerna:init && yarn lint && yarn lint:markdown && yarn check:spelling && yarn build && yarn typecheck && yarn test"
