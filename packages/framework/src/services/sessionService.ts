@@ -7,11 +7,11 @@ export const session = createNamespace('onhand.session')
 
 @injectable()
 export class SessionService implements ISessionService {
-  get<T>(key: string): T {
+  get<T> (key: string): T {
     return session.get(key)
   }
 
-  set<T>(key: string, value: T): void {
+  set<T> (key: string, value: T): void {
     session.set(key, value)
   }
 }

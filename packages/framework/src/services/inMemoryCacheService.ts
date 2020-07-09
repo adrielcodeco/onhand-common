@@ -15,7 +15,7 @@ export class InMemoryCacheService implements IInMemoryCacheService {
     return cache.has(timedKey)
   }
 
-  get<T>(key: string): T | undefined {
+  get<T> (key: string): T | undefined {
     const cache = container.get<NodeCache>(TYPES.NodeCache)
     const timedKey = this.timedKey(key)
     if (!cache.has(timedKey)) {
@@ -25,7 +25,7 @@ export class InMemoryCacheService implements IInMemoryCacheService {
     return cache.get<T>(cacheKey)
   }
 
-  set<T>(key: string, value: T): void {
+  set<T> (key: string, value: T): void {
     const cache = container.get<NodeCache>(TYPES.NodeCache)
     const timedKey = this.timedKey(key)
     const privateKey = this.privateKey(key)

@@ -9,7 +9,7 @@ export type AWSFunctionOptions = {
 }
 
 export abstract class AWSFunction<E, I, O> {
-  abstract get operation(): Operation<I, O>
+  abstract get operation (): Operation<I, O>
 
   constructor (
     private readonly options: AWSFunctionOptions,
@@ -24,7 +24,7 @@ export abstract class AWSFunction<E, I, O> {
     }
   }
 
-  abstract inputAdapter(event: E): Promise<I>
+  abstract inputAdapter (event: E): Promise<I>
 
   async handle (event: E): Promise<O> {
     assert(this.operation)
