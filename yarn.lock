@@ -2185,9 +2185,9 @@ aws-lambda@^1.0.6:
     watchpack "^2.0.0-beta.10"
 
 aws-sdk@*, aws-sdk@^2.712.0:
-  version "2.723.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.723.0.tgz#c9f5f21513ffade05c64b5ad64f6b9d7c39ab251"
-  integrity sha512-GmyMacu1x1BOA8tYZuZS1DKcdn7QQX+DJFdFgZ3IilMzlX3cdinMXkBc5onEnhbwHx657XHoPigJynTRGGNuWQ==
+  version "2.724.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.724.0.tgz#30e18c62930a17b5b0b5ec43f53e82996008b54d"
+  integrity sha512-XfTPfNAkpLn/RE9ODMs8PDoZ1cI5npeS4p452mDKWUGqdr8DthdQ+6QU786KSzBRB9Bs+k5MCXI62Nv//aLFZA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -3913,9 +3913,9 @@ eslint-plugin-import@^2.22.0:
     tsconfig-paths "^3.9.0"
 
 eslint-plugin-jest@^23.18.0:
-  version "23.19.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-23.19.0.tgz#da9c45a629bf3180269c7d5033afd7f8b910bde5"
-  integrity sha512-l5PLflALqnODl8Yy0H5hDs18aKJS1KTf66VZGXRpIhmbLbPLaTuMB2P+65fBpkdseSpnTVcIlBYvTvJSBi/itg==
+  version "23.20.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-23.20.0.tgz#e1d69c75f639e99d836642453c4e75ed22da4099"
+  integrity sha512-+6BGQt85OREevBDWCvhqj1yYA4+BFK4XnRZSGJionuEYmcglMZYLNNBBemwzbqUAckURaHdJSBcjHPyrtypZOw==
   dependencies:
     "@typescript-eslint/experimental-utils" "^2.5.0"
 
