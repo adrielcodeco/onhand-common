@@ -8217,13 +8217,13 @@ shimmer@^1.2.0:
   resolved "https://registry.npmjs.org/shimmer/-/shimmer-1.2.1.tgz#610859f7de327b587efebf501fb43117f9aff337"
   integrity sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==
 
-short-uuid@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/short-uuid/-/short-uuid-3.1.1.tgz#3ff427074b5fa7822c3793994d18a7a82e2f73a4"
-  integrity sha512-7dI69xtJYpTIbg44R6JSgrbDtZFuZ9vAwwmnF/L0PinykbFrhQ7V8omKsQcVw1TP0nYJ7uQp1PN6/aVMkzQFGQ==
+short-uuid@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/short-uuid/-/short-uuid-4.0.1.tgz#097d1db62778efef320725ee83035b5303274be2"
+  integrity sha512-cTUAZL4syillEa67u3Nuz++t7zA6D2cxA5r49PdkPuiI1s/vqngbkCsSv5DcjtK+sjooZbGvq1JaqkuXPlDRvA==
   dependencies:
     any-base "^1.1.0"
-    uuid "^3.3.2"
+    uuid "^8.3.0"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.3"
