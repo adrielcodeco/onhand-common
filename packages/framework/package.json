@@ -34,7 +34,7 @@
     "moment": "^2.27.0",
     "node-cache": "^5.1.2",
     "reflect-metadata": "^0.1.13",
-    "short-uuid": "^3.1.1",
+    "short-uuid": "^4.0.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {
