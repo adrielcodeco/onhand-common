@@ -8321,9 +8321,9 @@ shimmer@^1.2.0:
   integrity sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==
 
 short-uuid@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/short-uuid/-/short-uuid-4.0.1.tgz#097d1db62778efef320725ee83035b5303274be2"
-  integrity sha512-cTUAZL4syillEa67u3Nuz++t7zA6D2cxA5r49PdkPuiI1s/vqngbkCsSv5DcjtK+sjooZbGvq1JaqkuXPlDRvA==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/short-uuid/-/short-uuid-4.1.0.tgz#c959f46101b4278e2589d5c85b4c35a385b51764"
+  integrity sha512-Zjerp00N5uUC7ET1mEjz77vY9h5zm6IQivtHxcbnoSIWyK6PD/dQnU5w916F8lzQIJjxBTEbCKsAikE64WxUxQ==
   dependencies:
     any-base "^1.1.0"
     uuid "^8.3.0"
