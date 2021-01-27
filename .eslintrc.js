@@ -7,11 +7,8 @@ module.exports = {
     project: ['./tsconfig.eslint.json', './packages/*/tsconfig.json'],
     tsconfigRootDir: __dirname,
   },
-  plugins: ['@typescript-eslint', 'jest', 'prettier', 'standard'],
+  plugins: ['@typescript-eslint', 'jest', 'standard'],
   extends: [
-    'prettier',
-    'prettier/@typescript-eslint',
-    'prettier/standard',
     'eslint:recommended',
     'plugin:jest/recommended',
     'plugin:@typescript-eslint/recommended',
@@ -46,5 +43,8 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-throw-literal': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
   },
 }

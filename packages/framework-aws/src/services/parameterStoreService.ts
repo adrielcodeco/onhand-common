@@ -5,11 +5,9 @@ import { injectable, inject } from 'inversify'
 import {
   IInMemoryCacheServiceToken,
   IInMemoryCacheService,
-} from '@onhand/common-business/lib/services/iInMemoryCacheService'
-import {
-  IParameterStoreService,
-} from '@onhand/common-business-aws/lib/services/iParameterStoreService'
-import { ILogger, LogToken } from '@onhand/common-business/lib/modules/logger'
+} from '@onhand/common-business/#/services/iInMemoryCacheService'
+import { IParameterStoreService } from '@onhand/common-business-aws/#/services'
+import { ILogger, LogToken } from '@onhand/common-business/#/modules/logger'
 import { SSM } from 'aws-sdk'
 
 @injectable()
@@ -31,9 +29,9 @@ export class ParameterStoreService implements IParameterStoreService {
 
   constructor () {
     let ssmOptions: SSM.Types.ClientConfiguration | undefined
-    if (process.env.PARAMETERSTOREENDPOINT) {
+    if (process.env.PARAMETER_STORE_ENDPOINT) {
       ssmOptions = {
-        endpoint: process.env.PARAMETERSTOREENDPOINT,
+        endpoint: process.env.PARAMETER_STORE_ENDPOINT,
       }
     }
     this.ssm = new SSM(ssmOptions)

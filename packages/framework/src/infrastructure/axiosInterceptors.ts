@@ -1,7 +1,7 @@
 import axios from 'axios'
 import short from 'short-uuid'
-import { container } from '@onhand/common-business/lib/ioc/container'
-import { ILogger, LogToken } from '@onhand/common-business/lib/modules/logger'
+import { container } from '@onhand/common-business/#/ioc/container'
+import { ILogger, LogToken } from '@onhand/common-business/#/modules/logger'
 
 export function interceptors (): void {
   const logger = container.get<ILogger>(LogToken)
@@ -11,10 +11,10 @@ export function interceptors (): void {
       Reflect.set(config, 'requestId', requestId)
       const req = {
         requestId: requestId,
-        url: config.url,
+        url: `${config.baseURL ?? ''}${config.url ?? ''}`,
         method: config.method,
         data: config.data,
-        headers: config.headers,
+        headers: config.headers[config.method!],
       }
       logger.info(req)
       return config

@@ -1,6 +1,6 @@
 export const ISessionServiceToken = Symbol.for('ISessionService')
 
 export interface ISessionService {
-  get: <T>(key: string) => T
-  set: <T>(key: string, value: T) => void
+  get: <T>(key: string | symbol) => T
+  set: <T>(key: string | symbol, value: T) => void
 }

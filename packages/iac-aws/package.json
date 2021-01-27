@@ -1,0 +1,98 @@
+{
+  "name": "@onhand/iac-aws",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "codeco <adrielcodeco@hotmail.com>",
+  "homepage": "https://github.com/adrielcodeco/onhand-iac/tree/master/packages/iac-aws#readme",
+  "license": "ISC",
+  "bin": {
+    "onhand-iac-aws": "bin/iac"
+  },
+  "directories": {
+    "lib": "#"
+  },
+  "files": [
+    "#"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrielcodeco/onhand-iac.git"
+  },
+  "scripts": {
+    "build": "yarn clean && ttsc -b tsconfig.build.json",
+    "clean": "rimraf '#'",
+    "test": "jest --coverage --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "yarn:pack": "yarn pack && cpy 'onhand-iac-aws-*.tgz' '../../releases'"
+  },
+  "bugs": {
+    "url": "https://github.com/adrielcodeco/onhand-iac/issues"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    },
+    "moduleNameMapper": {
+      "^#/(.*)$": "<rootDir>/src/$1",
+      "^$/(.*)$": "<rootDir>/tests/$1"
+    },
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "./tests/.+.ts$",
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "coverageReporters": [
+      "lcov"
+    ]
+  },
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "^1.85.0",
+    "@aws-cdk/aws-cognito": "^1.85.0",
+    "@aws-cdk/aws-ec2": "^1.85.0",
+    "@aws-cdk/aws-ecs": "^1.85.0",
+    "@aws-cdk/aws-ecs-patterns": "^1.85.0",
+    "@aws-cdk/aws-iam": "^1.85.0",
+    "@aws-cdk/aws-lambda": "^1.85.0",
+    "@aws-cdk/aws-rds": "^1.85.0",
+    "@aws-cdk/aws-s3": "^1.85.0",
+    "@aws-cdk/cdk": "^0.36.1",
+    "@aws-cdk/core": "^1.85.0",
+    "@onhand/common-framework-aws": "^1.0.6",
+    "@onhand/openapi": "^1.0.6",
+    "archiver": "^5.2.0",
+    "aws-cdk": "^1.85.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-winston": "^4.0.5",
+    "fs-extra": "^9.1.0",
+    "lambda-local": "^1.7.4",
+    "lodash": "^4.17.20",
+    "openapi-types": "^7.2.3",
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.19",
+    "typedi": "^0.10.0",
+    "winston": "^3.3.3",
+    "yaml": "^1.10.0",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@types/archiver": "^5.1.0",
+    "@types/aws-lambda": "^8.10.71",
+    "@types/cors": "^2.8.9",
+    "@types/express": "^4.17.11",
+    "@types/fs-extra": "^9.0.6",
+    "@types/lodash": "^4.14.168"
+  }
+}

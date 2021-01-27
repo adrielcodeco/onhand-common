@@ -1,0 +1,61 @@
+{
+  "name": "@onhand/utils",
+  "version": "1.0.6",
+  "description": "> TODO: description",
+  "author": "Codeco <adriel.codeco@raizen.com>",
+  "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/utils#readme",
+  "license": "ISC",
+  "main": "./#/index.js",
+  "directories": {
+    "lib": "#"
+  },
+  "files": [
+    "#"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrielcodeco/onhand-common.git"
+  },
+  "scripts": {
+    "build": "yarn clean && ttsc -b tsconfig.build.json",
+    "clean": "rimraf '#'",
+    "test": "jest --coverage --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "yarn:pack": "yarn pack && cpy 'onhand-utils-*.tgz' '../../releases'"
+  },
+  "bugs": {
+    "url": "https://github.com/adrielcodeco/onhand-common/issues"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    },
+    "moduleNameMapper": {
+      "^#/(.*)$": "<rootDir>/src/$1",
+      "^$/(.*)$": "<rootDir>/tests/$1"
+    },
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "./tests/.+.ts$",
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "coverageReporters": [
+      "lcov"
+    ]
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
+}

@@ -6,37 +6,27 @@
   "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/business#readme",
   "license": "ISC",
   "directories": {
-    "lib": "lib"
+    "lib": "#"
   },
   "files": [
-    "lib"
+    "#"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adrielcodeco/onhand-common.git"
   },
   "scripts": {
-    "build": "rimraf lib && ttsc -b tsconfig.build.json",
+    "build": "yarn clean && ttsc -b tsconfig.build.json",
+    "clean": "rimraf '#'",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "jest --coverage",
+    "test": "jest --coverage --passWithNoTests",
     "yarn:pack": "yarn pack && cpy 'onhand-common-business-*.tgz' '../../releases'"
   },
   "bugs": {
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
   },
   "dependencies": {
-    "inversify": "^5.0.1"
-  },
-  "devDependencies": {
-    "@types/jest": "^26.0.4",
-    "@types/node": "^14.0.20",
-    "@zerollup/ts-transform-paths": "^1.7.18",
-    "codecov": "^3.7.0",
-    "cpy-cli": "^3.1.1",
-    "jest": "^26.1.0",
-    "ts-jest": "^26.1.1",
-    "ttypescript": "^1.5.10",
-    "typescript": "^4.0.2"
+    "inversify": "^5.0.5"
   },
   "jest": {
     "globals": {

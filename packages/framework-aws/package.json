@@ -6,18 +6,19 @@
   "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/framework-aws#readme",
   "license": "ISC",
   "directories": {
-    "lib": "lib"
+    "lib": "#"
   },
   "files": [
-    "lib"
+    "#"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adrielcodeco/onhand-common.git"
   },
   "scripts": {
-    "build": "rimraf lib && ttsc -b tsconfig.build.json",
-    "test": "jest --coverage",
+    "build": "yarn clean && ttsc -b tsconfig.build.json",
+    "clean": "rimraf '#'",
+    "test": "jest --coverage --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "yarn:pack": "yarn pack && cpy 'onhand-common-framework-aws-*.tgz' '../../releases'"
   },
@@ -29,27 +30,23 @@
     "@onhand/common-business-aws": "^1.0.6",
     "@onhand/common-controller": "^1.0.6",
     "@onhand/common-framework": "^1.0.6",
+    "@onhand/utils": "^1.0.6",
+    "accesscontrol": "^2.2.1",
+    "amazon-cognito-identity-js": "^4.5.7",
     "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.712.0",
-    "class-validator": "^0.12.2",
-    "inversify": "^5.0.1",
+    "aws-sdk": "^2.831.0",
+    "class-validator": "^0.13.1",
+    "cross-fetch": "^3.0.6",
+    "dynamoose": "^2.5.0",
+    "inversify": "^5.0.5",
+    "inversify-binding-decorators": "^4.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.4",
     "lodash": "^4.17.19",
     "node-cache": "^5.1.2",
+    "pify": "^5.0.0",
     "reflect-metadata": "^0.1.13",
     "winston": "^3.3.3"
-  },
-  "devDependencies": {
-    "@types/jest": "^26.0.4",
-    "@types/node": "^14.0.20",
-    "@types/node-cache": "^4.2.5",
-    "@typescript-eslint/eslint-plugin": "^3.6.0",
-    "@typescript-eslint/parser": "^3.6.0",
-    "@zerollup/ts-transform-paths": "^1.7.18",
-    "codecov": "^3.7.0",
-    "cpy-cli": "^3.1.1",
-    "jest": "^26.1.0",
-    "ttypescript": "^1.5.10",
-    "typescript": "^4.0.2"
   },
   "jest": {
     "globals": {

@@ -1,6 +1,6 @@
 import NodeCache from 'node-cache'
-import { TYPES } from '@onhand/common-business/lib/ioc/types'
-import { container } from '@onhand/common-business/lib/ioc/container'
+import { TYPES } from '@onhand/common-business/#/ioc/types'
+import { container } from '@onhand/common-business/#/ioc/container'
 
 type Constructor<T> = { new (...args: any[]): T }
 const cacheKeySSM = 'CACHE_KEY_SSM'

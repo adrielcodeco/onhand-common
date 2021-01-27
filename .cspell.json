@@ -5,7 +5,7 @@
     ".cspell.json",
     "**/node_modules/**",
     "*.d.ts",
-    "**/lib/**",
+    "**/#/**",
     "**/coverage/**",
     "**/tests/**"
   ],
@@ -20,12 +20,27 @@
     "bash"
   ],
   "words": [
-    "onhand",
-    "inversify",
-    "emerg",
+    "accesscontrol",
+    "APIV",
     "consts",
+    "cxapp",
+    "dynamoose",
+    "emerg",
+    "envfile",
+    "Fargate",
+    "flagr",
+    "IDTYPE",
+    "inversify",
+    "jsend",
+    "localstack",
+    "onhand",
+    "openapi",
     "PARAMETERSTOREENDPOINT",
+    "pems",
+    "pify",
     "printf",
-    "jsend"
+    "tsting",
+    "typedi",
+    "Unprocessable"
   ]
 }

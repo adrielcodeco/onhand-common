@@ -1,16 +1,16 @@
 import NodeCache from 'node-cache'
 import { chunk, concat } from 'lodash'
-import { container } from '@onhand/common-business/lib/ioc/container'
-import { TYPES } from '@onhand/common-business/lib/ioc/types'
-import CACHE from '@onhand/common-business-aws/lib/consts/cache'
+import { container } from '@onhand/common-business/#/ioc/container'
+import { TYPES } from '@onhand/common-business/#/ioc/types'
+import * as CACHE from '@onhand/common-business-aws/#/consts/cache'
 import {
   IInMemoryCacheService,
   IInMemoryCacheServiceToken,
-} from '@onhand/common-business/lib/services/iInMemoryCacheService'
+} from '@onhand/common-business/#/services/iInMemoryCacheService'
 import {
   IParameterStoreService,
   IParameterStoreServiceToken,
-} from '@onhand/common-business-aws/lib/services/iParameterStoreService'
+} from '@onhand/common-business-aws/#/services/iParameterStoreService'
 
 type Parameters = Array<{ name: string, value: string | string[] }>
 

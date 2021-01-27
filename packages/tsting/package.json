@@ -1,0 +1,42 @@
+{
+  "name": "@onhand/tsting",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "Codeco <adriel.codeco@raizen.com>",
+  "homepage": "https://github.com/adrielcodeco/onhand-tsting/tree/master/packages/tsting#readme",
+  "license": "ISC",
+  "main": "#/lib/index.js",
+  "bin": {
+    "tsting": "bin/tsting"
+  },
+  "directories": {
+    "lib": "#"
+  },
+  "files": [
+    "#"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrielcodeco/onhand-tsting.git"
+  },
+  "scripts": {
+    "build": "yarn clean && ttsc -b tsconfig.build.json",
+    "clean": "rimraf '#'",
+    "test": "jest --coverage --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "yarn:pack": "yarn pack && cpy 'onhand-tsting-*.tgz' '../../releases'"
+  },
+  "bugs": {
+    "url": "https://github.com/adrielcodeco/onhand-tsting/issues"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "lodash": "^4.17.20",
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.19",
+    "winston": "^3.3.3",
+    "winston-transport": "^4.4.0",
+    "yaml": "^1.10.0",
+    "yargs": "^16.2.0"
+  }
+}

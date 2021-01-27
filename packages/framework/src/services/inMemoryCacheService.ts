@@ -2,9 +2,9 @@
 
 import moment from 'moment'
 import { injectable } from 'inversify'
-import { IInMemoryCacheService } from '@onhand/common-business/lib/services/iInMemoryCacheService'
-import { container } from '@onhand/common-business/lib/ioc/container'
-import { TYPES } from '@onhand/common-business/lib/ioc/types'
+import { IInMemoryCacheService } from '@onhand/common-business/#/services/iInMemoryCacheService'
+import { container } from '@onhand/common-business/#/ioc/container'
+import { TYPES } from '@onhand/common-business/#/ioc/types'
 import NodeCache from 'node-cache'
 
 @injectable()
@@ -15,7 +15,7 @@ export class InMemoryCacheService implements IInMemoryCacheService {
     return cache.has(timedKey)
   }
 
-  get<T> (key: string): T | undefined {
+  get<T>(key: string): T | undefined {
     const cache = container.get<NodeCache>(TYPES.NodeCache)
     const timedKey = this.timedKey(key)
     if (!cache.has(timedKey)) {
@@ -25,12 +25,27 @@ export class InMemoryCacheService implements IInMemoryCacheService {
     return cache.get<T>(cacheKey)
   }
 
-  set<T> (key: string, value: T): void {
+  set<T>(key: string, value: T): void {
     const cache = container.get<NodeCache>(TYPES.NodeCache)
     const timedKey = this.timedKey(key)
     const privateKey = this.privateKey(key)
     cache.set(timedKey, privateKey)
     cache.set(privateKey, value)
+  }
+
+  async fetch<T>(key: string, func: () => Promise<T>): Promise<T> {
+    const cache = container.get<NodeCache>(TYPES.NodeCache)
+    const timedKey = this.timedKey(key)
+    if (!cache.has(timedKey)) {
+      const value = await func()
+      const timedKey = this.timedKey(key)
+      const privateKey = this.privateKey(key)
+      cache.set(timedKey, privateKey)
+      cache.set(privateKey, value)
+      return value
+    }
+    const cacheKey = cache.get<string>(timedKey)!
+    return cache.get<T>(cacheKey)!
   }
 
   private privateKey (key: string): string {

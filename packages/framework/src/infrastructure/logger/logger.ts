@@ -1,29 +1,28 @@
 import { EOL } from 'os'
 import { isEmpty } from 'lodash'
 import { inspect } from 'util'
-import { injectable } from 'inversify'
-import { ILogger } from '@onhand/common-business/lib/modules/logger'
-import { createLogger, Logger, transports, format } from 'winston'
+import { ILogger } from '@onhand/common-business/#/modules/logger'
+import { createLogger, Logger, format } from 'winston'
+import * as Transport from 'winston-transport'
 
-@injectable()
-export class ConsoleLogger implements ILogger {
+export class LoggerClass implements ILogger {
   private readonly logger!: Logger
 
-  constructor () {
+  constructor (transports: Transport[]) {
     const { combine, metadata, printf } = format
     this.logger = createLogger({
       level: process.env.LOG_LEVEL ?? 'info',
       format: combine(
         metadata(),
         printf(info => {
-          let result = `${info.level}: `
+          let result = `${info.level.toUpperCase()}: `
           // tslint:disable-next-line: strict-type-predicates
           if (typeof info.message === 'string') {
             result += info.message
           } else {
             result += inspect(info.message, false, 5)
           }
-          if (!isEmpty(info.metadata)) {
+          if (info.metadata && !isEmpty(info.metadata)) {
             result += EOL
             if (typeof info.metadata === 'string') {
               result += info.metadata
@@ -34,21 +33,17 @@ export class ConsoleLogger implements ILogger {
           return result
         }),
       ),
-      transports: [
-        new transports.Console({
-          handleExceptions: true,
-        }),
-      ],
+      transports,
       exitOnError: false,
     })
   }
 
   public log (log: any, context?: any, level?: string): void {
-    const func = Reflect.get(this.logger, level ?? 'info') as (
-      log: any,
-      context?: any,
-    ) => void
-    func(log, context)
+    if ((level ?? 'info') in this.logger) {
+      const logger = this.logger as any
+      const func = logger[level ?? 'info'] as (log: any, context?: any) => void
+      func(log, context)
+    }
   }
 
   public debug (log: any, context?: any): void {

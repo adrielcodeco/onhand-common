@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@onhand/ts-transform-json-schema": ["../src/index"]
+    },
+    "target": "es2015",
+    "plugins": [
+      {
+        "transform": "@onhand/ts-transform-json-schema/src/transform",
+        "type": "program"
+      }
+    ]
+  },
+  "files": [
+    "/Users/codeco/Mit/github/onhand-common/packages/ts-transform-json-schema/tests/index.ts"
+  ]
+}

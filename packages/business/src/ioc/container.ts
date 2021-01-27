@@ -1,5 +1,12 @@
 import { Container } from 'inversify'
 
-const container = new Container({ skipBaseClassChecks: true })
+const container = new Container({
+  skipBaseClassChecks: true,
+  autoBindInjectable: true,
+})
 
-export { container }
+function newContainerSandbox () {
+  return Container.merge(container, new Container())
+}
+
+export { container, newContainerSandbox }

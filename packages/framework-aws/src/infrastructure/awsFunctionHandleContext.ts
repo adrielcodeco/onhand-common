@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify'
 import { get } from 'lodash'
-import { container } from '@onhand/common-business/lib/ioc/container'
-import { ILogger, LogToken } from '@onhand/common-business/lib/modules/logger'
-import { TYPES } from '@onhand/common-business/lib/ioc/types'
+import { container } from '@onhand/common-business/#/ioc/container'
+import { ILogger, LogToken } from '@onhand/common-business/#/modules/logger'
+import { TYPES } from '@onhand/common-business/#/ioc/types'
 import {
   AWSFunctionHandleContextOptions,
   AWSFunctionHandleContextOptionsToken,
@@ -10,12 +10,12 @@ import {
 import {
   ISessionService,
   ISessionServiceToken,
-} from '@onhand/common-business/lib/services/iSessionService'
+} from '@onhand/common-business/#/services/iSessionService'
 import { initSSM } from '#/infrastructure/initSSM'
-import { HttpErrors } from '@onhand/common-framework/lib/errors'
+import { Unauthorized } from '@onhand/jsend'
 
 @injectable()
-export abstract class AWSFunctionHandleContext<E> {
+export class AWSFunctionHandleContext<E> {
   @inject(LogToken)
   private readonly logger!: ILogger
 
@@ -23,36 +23,48 @@ export abstract class AWSFunctionHandleContext<E> {
   readonly options!: AWSFunctionHandleContextOptions
 
   async init (event: E): Promise<void> {
-    this.logger.info('initializing containerContext', this.options)
-    await this.initFeatureFlags(event)
-    await this.initAuthenticatedUser(event)
+    this.logger.debug('initializing containerContext', this.options)
+    await this.initRequestContext(event)
     await this.ensureSSM()
   }
 
-  async initFeatureFlags (event: E): Promise<void> {
-    // nothing
-  }
-
-  async initAuthenticatedUser (event: E): Promise<void> {
+  async initRequestContext (event: E): Promise<void> {
     if (!event) {
       return
     }
-    const externalIdentifier = get(
-      event,
-      'requestContext.authorizer.externalIdentifier',
-    )
-
     const logger = container.get<ILogger>(LogToken)
-    logger.info(`externalIdentifier: ${String(externalIdentifier)}`)
-
-    if (externalIdentifier) {
-      const session = container.get<ISessionService>(ISessionServiceToken)
-      session.set(
-        TYPES.ExternalIdentifier.toString(),
-        parseInt(externalIdentifier, 10),
-      )
+    const session = container.get<ISessionService>(ISessionServiceToken)
+    const requestId = get(event, 'requestContext.requestId')
+    const userIdentifier = get(
+      event,
+      'requestContext.authorizer.userIdentifier',
+    )
+    const userRole = get(event, 'requestContext.authorizer.userRole')
+    const userScope = get(event, 'requestContext.authorizer.userScope')
+    const userDeviceId = get(event, 'requestContext.authorizer.userDeviceId')
+    if (requestId) {
+      logger.debug(`requestId: ${String(requestId)}`)
+      session.set(TYPES.RequestId, requestId)
+    }
+    if (userIdentifier) {
+      logger.debug(`userIdentifier: ${String(userIdentifier)}`)
+      session.set(TYPES.UserIdentifier, userIdentifier)
     } else if (this.options.authenticated) {
-      throw HttpErrors.HRC401
+      throw Unauthorized()
+    }
+    if (userRole) {
+      logger.debug(`userRole: ${String(userRole)}`)
+      session.set(TYPES.UserRole, userRole)
+    }
+    if (userScope) {
+      logger.debug(`userScope: ${String(userScope)}`)
+      const session = container.get<ISessionService>(ISessionServiceToken)
+      session.set(TYPES.UserScope, userScope)
+    }
+    if (userDeviceId) {
+      logger.debug(`userDeviceId: ${String(userDeviceId)}`)
+      const session = container.get<ISessionService>(ISessionServiceToken)
+      session.set(TYPES.UserDeviceId, userDeviceId)
     }
   }
 

@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+require('ts-node').register()
+require('tsconfig-paths').register()
+require('source-map-support').install()
+
+require('../#/bin/tsting-runner')
