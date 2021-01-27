@@ -2,10 +2,10 @@ version: 2.1
 
 aliases:
   - &attach_workspace
-      at: ~/project
+    at: ~/project
   - &persist_to_workspace
-      root: ~/project
-      paths: .
+    root: ~/project
+    paths: .
 
 defaults: &defaults
   docker:
@@ -22,6 +22,9 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: yarn install
+          command: yarn
       - run:
           name: lerna init
           command: yarn lerna:init
@@ -184,4 +187,3 @@ workflows:
           requires:
             - pack
           filters: *tagFilter
-
