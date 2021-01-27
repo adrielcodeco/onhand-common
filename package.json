@@ -13,21 +13,19 @@
     "format": "prettier --write \"./**/*.{ts,js,json,md}\"",
     "generate:contributors": "yarn ts-node --transpile-only ./tools/generate-contributors.ts && yarn all-contributors generate",
     "help-me": "lerna-wizard",
-    "lerna:bootstrap": "lerna bootstrap --ignore-scripts",
-    "lerna:init": "lerna link --force-local",
+    "lerna:init": "lerna bootstrap --ignore-scripts && lerna link --force-local",
     "lerna:publish": "lerna publish --canary --no-git-reset --force-publish --skip-git --yes --loglevel=verbose",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "lint:markdown:fix": "lint:markdown --fix",
     "lint:markdown": "markdownlint '**/*.md' --ignore-path=.markdownlintignore",
     "lint": "NODE_OPTIONS=\"--max-old-space-size=5120\" eslint . --ext .js,.ts",
-    "postinstall": "yarn lerna:init && yarn build",
     "pre-commit": "yarn lint-staged",
     "pre-push": "yarn check:format",
     "release": "lerna version patch --force-publish",
     "test": "lerna run test --concurrency 1",
     "typecheck": "lerna run typecheck",
     "upgrade:pkgs": "find . -type f -name 'package.json' -not -path './.git/*' -not -path '*/node_modules/*' -execdir ncu --upgrade \\;",
-    "validations": "yarn lerna:init && yarn lint && yarn lint:markdown && yarn check:spelling && yarn build && yarn typecheck && yarn test"
+    "validations": "yarn lint && yarn lint:markdown && yarn check:spelling && yarn build && yarn typecheck && yarn test"
   },
   "repository": {
     "type": "git",
