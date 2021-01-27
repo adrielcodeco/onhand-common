@@ -24,7 +24,7 @@ jobs:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: lerna bootstrap
-          command: lerna bootstrap --ignore-scripts
+          command: yarn lerna:bootstrap
       - run:
           name: lerna init
           command: yarn lerna:init

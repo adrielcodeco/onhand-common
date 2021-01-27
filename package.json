@@ -13,6 +13,7 @@
     "format": "prettier --write \"./**/*.{ts,js,json,md}\"",
     "generate:contributors": "yarn ts-node --transpile-only ./tools/generate-contributors.ts && yarn all-contributors generate",
     "help-me": "lerna-wizard",
+    "lerna:bootstrap": "lerna bootstrap --ignore-scripts",
     "lerna:init": "lerna link --force-local",
     "lerna:publish": "lerna publish --canary --no-git-reset --force-publish --skip-git --yes --loglevel=verbose",
     "lint:fix": "eslint . --ext .js,.ts --fix",
