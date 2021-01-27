@@ -23,8 +23,8 @@ jobs:
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: yarn install
-          command: yarn
+          name: lerna bootstrap
+          command: lerna bootstrap --ignore-scripts
       - run:
           name: lerna init
           command: yarn lerna:init
@@ -78,7 +78,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace: *attach_workspace
-      - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+      - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN && npm whoami
       - run: npm whoami
       - run: yarn lerna:publish
 
@@ -86,7 +86,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace: *attach_workspace
-      - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+      - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN && npm whoami
       - run: npm whoami
       - run: yarn lerna publish from-package --force-publish --yes --loglevel=verbose --no-git-reset --skip-git  --exact
 
