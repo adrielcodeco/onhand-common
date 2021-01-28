@@ -1,6 +1,6 @@
 {
   "name": "@onhand/jsend",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "> TODO: description",
   "author": "Codeco <adrielcodeco@hotmail.com>",
   "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/jsend#readme",
@@ -26,7 +26,6 @@
   "bugs": {
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
   },
-  "dependencies": {},
   "jest": {
     "globals": {
       "ts-jest": {
