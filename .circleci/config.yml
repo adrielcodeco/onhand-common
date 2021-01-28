@@ -85,7 +85,7 @@ jobs:
       - attach_workspace: *attach_workspace
       - run: npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
       - run: npm whoami
-      - run: yarn lerna publish from-package --force-publish --yes --loglevel=verbose --no-git-reset --skip-git  --exact
+      - run: yarn lerna publish from-package --force-publish --yes --loglevel=verbose --no-git-reset --skip-git --no-verify-access --no-verify-registry --exact
 
   pack:
     <<: *defaults
