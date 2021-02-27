@@ -33,7 +33,7 @@
     "class-validator": "^0.13.1",
     "cls-hooked": "^4.2.2",
     "inversify": "^5.0.5",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "moment": "^2.27.0",
     "node-cache": "^5.1.2",
     "reflect-metadata": "^0.1.13",
@@ -70,6 +70,6 @@
     ]
   },
   "devDependencies": {
-    "@types/cls-hooked": "^4.3.1"
+    "@types/cls-hooked": "^4.3.3"
   }
 }

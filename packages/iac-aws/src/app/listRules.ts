@@ -1,10 +1,15 @@
 import { OpenAPIV3 } from 'openapi-types'
 import { isHttpMethod, extractOpenAPISpecification } from '@onhand/openapi'
 import { Options } from '#/app/options'
+import { getConfigOrDefault } from '#/app/config'
 
 export async function listRules (options: Options) {
   const paths: Array<{ path: string, rules: any[] }> = []
-  const openApi = extractOpenAPISpecification(options.openApiFilePath ?? '')
+  const openApiFilePath = getConfigOrDefault(
+    options.config,
+    c => c.app?.openApi,
+  )
+  const openApi = extractOpenAPISpecification(openApiFilePath ?? '')
   for (const routePath in openApi.paths) {
     if (!Object.prototype.hasOwnProperty.call(openApi.paths, routePath)) {
       continue

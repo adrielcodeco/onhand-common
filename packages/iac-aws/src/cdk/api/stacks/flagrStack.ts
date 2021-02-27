@@ -3,20 +3,25 @@ import * as rds from '@aws-cdk/aws-rds'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import * as ecs from '@aws-cdk/aws-ecs'
 import * as ecs_patterns from '@aws-cdk/aws-ecs-patterns'
-import { Container } from 'typedi'
 import { Options, resourceName } from '#/app/options'
 
 export class FlagrStack extends cdk.Stack {
   private readonly options: Options
   private readonly vpc = ec2.Vpc.fromLookup(this, 'vpc', { isDefault: true })
 
-  constructor (scope: cdk.Construct, appName: string, stage: string) {
+  constructor (scope: cdk.Construct, options: Options) {
     // TODO: add description to cognito stack
-    super(scope, resourceName(appName, stage, 'flagr'), { description: '' })
+    super(scope, resourceName(options, 'flagr'), {
+      description: '',
+    })
 
-    this.options = Container.get<Options>('options')
+    this.options = options
 
-    if (this.options.enableFlagr) {
+    console.log(this.options.appName)
+
+    const enableFlagr = false // TODO: adicionar o enabled nas configs
+
+    if (enableFlagr) {
       this.createMysql()
       this.createFargate()
     }

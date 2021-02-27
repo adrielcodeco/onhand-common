@@ -6,11 +6,13 @@ import { Options, resourceName } from '#/app/options'
 export class CognitoStack extends cdk.Stack {
   private readonly options: Options
 
-  constructor (scope: cdk.Construct, appName: string, stage: string) {
+  constructor (scope: cdk.Construct, options: Options) {
     // TODO: add description to cognito stack
-    super(scope, resourceName(appName, stage, 'cognito'), { description: '' })
+    super(scope, resourceName(options, 'cognito'), {
+      description: '',
+    })
 
-    this.options = Container.get<Options>('options')
+    this.options = options
 
     this.createUserPool()
   }

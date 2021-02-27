@@ -17,16 +17,18 @@ export function DyModel<M> (
   tableName: string,
   schema: any,
   options?: Partial<ModelOptions>,
+  ohInternalVersion?: string,
 ): () => DyModelType<M> {
   return () => {
     Object.assign(schema, {
       ohInternalVersion: {
         type: String,
         default: async () => {
-          if (!container.isBound('ohInternalVersion')) {
+          if (!ohInternalVersion && !container.isBound('ohInternalVersion')) {
             throw new Error(ohInternalVersionNotFoundMessage)
           }
-          const value = container.get<string>('ohInternalVersion')
+          const value =
+            ohInternalVersion ?? container.get<string>('ohInternalVersion')
           if (!value) {
             throw new Error(ohInternalVersionNotFoundMessage)
           }

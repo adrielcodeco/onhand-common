@@ -77,7 +77,7 @@ function findFunctions (context: any) {
   }: { openApiFilePath: string, functionsDir: string } = context
   const openApiFileDir = path.dirname(openApiFilePath)
   const absoluteFunctionsDir = path.resolve(openApiFileDir, functionsDir)
-  const files = glob.sync('**/*.js', { cwd: absoluteFunctionsDir })
+  const files = glob.sync('**/*.[tj]s', { cwd: absoluteFunctionsDir })
   Object.assign(context, { files, absoluteFunctionsDir })
 }
 

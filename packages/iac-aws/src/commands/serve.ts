@@ -12,7 +12,7 @@ export async function serveCommand (
     setupDB: boolean
   },
 ) {
-  const options = loadConfig(configPath)
+  const options = loadConfig({}, configPath)
   if (serverOptions?.setupDB) {
     const childProcess: ChildProcess = spawn(
       'node',

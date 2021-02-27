@@ -3,7 +3,6 @@ import * as apigateway from '@aws-cdk/aws-apigateway'
 import * as lambda from '@aws-cdk/aws-lambda'
 import * as iam from '@aws-cdk/aws-iam'
 import * as s3 from '@aws-cdk/aws-s3'
-import path from 'path'
 import Container, { Service } from 'typedi'
 import { OpenAPIV3 } from 'openapi-types'
 import { Options, resourceName } from '#/app/options'
@@ -16,29 +15,29 @@ export class ApiGatewayStack extends cdk.Stack {
   private readonly options: Options
   private readonly openapi: OpenAPIV3.Document
   private readonly bucket?: s3.IBucket
-  // private readonly userPoolId: string
-  // private readonly userPoolClientId: string
-  // private readonly userPoolRegion: string
   private readonly functions: FunctionsType
   private apiResource!: apigateway.IResource
   private apiGatewayRole!: iam.Role
   private api!: apigateway.RestApi
   private readonly authorizers = new Map<string, apigateway.IAuthorizer>()
 
-  constructor (scope: cdk.Construct, appName: string) {
+  constructor (scope: cdk.Construct, options: Options) {
     // TODO: add description to apigateway stack
-    super(scope, resourceName(appName, 'apigateway'), { description: '' })
+    super(scope, resourceName(options, 'apigateway'), {
+      description: '',
+      env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: process.env.CDK_DEFAULT_REGION,
+      },
+    })
 
-    this.options = Container.get<Options>('options')
+    this.options = options
     this.openapi = Container.get<OpenAPIV3.Document>('openapi')
     this.functions = Container.get<FunctionsType>('functions')
-    // this.userPoolId = Container.get('userPoolId')
-    // this.userPoolClientId = Container.get('userPoolClientId')
-    // this.userPoolRegion = Container.get('userPoolRegion')
-    const s3AssetsArn = Container.get<string>('s3-assets')
+    const s3AssetsArn = Container.get<string>('s3-api')
     this.bucket = s3.Bucket.fromBucketArn(
       this,
-      resourceName(this.options.appName, 'assets'),
+      resourceName(this.options, 's3-api', true),
       s3AssetsArn,
     )
 
@@ -59,7 +58,7 @@ export class ApiGatewayStack extends cdk.Stack {
   }
 
   private createApiGateway () {
-    const restApiName = resourceName(this.options.appName, 'api')
+    const restApiName = resourceName(this.options, 'api')
     this.api = new apigateway.RestApi(this, restApiName, {
       restApiName,
       deployOptions: {
@@ -75,29 +74,11 @@ export class ApiGatewayStack extends cdk.Stack {
     Container.set('restApi', this.api)
     Container.set('restApiId', this.api.restApiId)
 
-    this.apiResource = this.api.root.addResource('api')
+    this.apiResource = this.api.root
 
-    this.apiResource.addMethod(
-      'ANY',
-      new apigateway.MockIntegration({
-        integrationResponses: [
-          {
-            statusCode: '200',
-          },
-        ],
-        passthroughBehavior: apigateway.PassthroughBehavior.NEVER,
-        requestTemplates: {
-          'application/json': '{ "statusCode": 200 }',
-        },
-      }),
-      {
-        methodResponses: [{ statusCode: '200' }],
-      },
-    )
-
-    const apiIdExportName = resourceName(this.options.appName, 'api-Id')
+    const apiIdExportName = resourceName(this.options, 'api-Id')
     const apiRootResourceIdExportName = resourceName(
-      this.options.appName,
+      this.options,
       'api-rootResourceId',
     )
     // eslint-disable-next-line no-new
@@ -123,17 +104,8 @@ export class ApiGatewayStack extends cdk.Stack {
         continue
       }
       const sec = this.openapi.components?.securitySchemes![secKey]
-      const {
-        functionFileAbsolutePath: absoluteFilePath,
-        className,
-        handlerName,
-      } = manageFunctionMetadata(sec).get()
-      const { appSrcDir } = this.options
-      const fileExt = path.extname(absoluteFilePath)
-      const fileName = path.basename(absoluteFilePath, fileExt)
-      const fileDir = path.dirname(absoluteFilePath)
-      const srcRelativeFilePath = path.relative(appSrcDir, fileDir)
-      const handler = `${srcRelativeFilePath}/${fileName}.${handlerName}`
+      const { className, handlerName } = manageFunctionMetadata(sec).get()
+      const handler = `index.${handlerName}`
       const functionName = className
       const authorizerFunc = new lambda.Function(
         this,
@@ -141,13 +113,13 @@ export class ApiGatewayStack extends cdk.Stack {
         {
           handler,
           runtime: lambda.Runtime.NODEJS_12_X,
-          description: '',
-          functionName,
+          description: `deployed on: ${new Date().toISOString()}`,
+          functionName: resourceName(this.options, functionName),
           code: lambda.Code.fromBucket(
             this.bucket!,
             `${this.options.packageName ?? ''}-${
               this.options.packageVersion ?? ''
-            }.zip`,
+            }/${functionName}.zip`,
             undefined,
           ),
           currentVersionOptions: {
@@ -156,7 +128,7 @@ export class ApiGatewayStack extends cdk.Stack {
           },
           memorySize: 128,
           reservedConcurrentExecutions: undefined,
-          timeout: undefined,
+          timeout: cdk.Duration.seconds(10),
         },
       )
       this.createAuthAuthorizers(className, authorizerFunc)

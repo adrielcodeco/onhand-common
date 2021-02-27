@@ -13,6 +13,7 @@ export async function testRunner (
   config: Config,
 ): Promise<Statistics> {
   return new Promise((resolve, reject) => {
+    let ended = false
     const childProcess: ChildProcess = spawn(
       'node',
       [path.resolve(__dirname, '../../bin/tsting-runner'), testPath],
@@ -26,8 +27,28 @@ export async function testRunner (
         },
       },
     )
+    childProcess.on('error', () => {
+      if (ended) {
+        return
+      }
+      // eslint-disable-next-line prefer-promise-reject-errors
+      reject('an error has occurred.')
+      ended = true
+      childProcess.kill('SIGINT')
+    })
+    childProcess.on('exit', () => {
+      if (ended) {
+        return
+      }
+      // eslint-disable-next-line prefer-promise-reject-errors
+      reject('an error has occurred.')
+      ended = true
+    })
     childProcess.on('message', (msg: any) => {
       if (msg.action === 'exit') {
+        if (ended) {
+          return
+        }
         if (msg.err) {
           reject(
             typeof msg.err === 'string'
@@ -37,6 +58,8 @@ export async function testRunner (
         } else {
           resolve(msg.statistics as Statistics)
         }
+        ended = true
+        childProcess.kill('SIGINT')
       }
     })
   })

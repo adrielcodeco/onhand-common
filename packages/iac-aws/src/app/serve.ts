@@ -17,6 +17,7 @@ import {
   manageFunctionMetadata,
 } from '@onhand/openapi'
 import { Options } from '#/app/options'
+import { getConfigOrDefault } from '#/app/config'
 import { build } from '#/app/build'
 
 const regionId = 'us-east-1'
@@ -31,11 +32,22 @@ export async function serve (
   if (!serverOptions?.noBuild) {
     await build(options)
   }
-  const { openApiFilePath, appSrcDir, envFilePath, localServerPort } = options
+  const { localServerPort } = options
+  const openApiFilePath = getConfigOrDefault(
+    options.config,
+    c => c.app?.openApi,
+  )
+  const appSrcDir = path.resolve(
+    options.cwd,
+    getConfigOrDefault(options.config, c => c.app?.src)!,
+  )
+  const envFilePath = '' // TODO: enable .env file support
   if (!openApiFilePath) {
     throw new Error('OpenApi class file not found')
   }
-  const openApi = extractOpenAPISpecification(openApiFilePath)
+  const openApi = extractOpenAPISpecification(
+    path.resolve(options.cwd, openApiFilePath),
+  )
   const app = express()
   app.use(express.json())
   app.use(cors())

@@ -1,6 +1,9 @@
 import Ajv from 'ajv'
 import axios from 'axios'
+import moment from 'moment'
 import colors from 'colors/safe'
+import { plugin } from 'ajv-moment'
+import addFormats from 'ajv-formats'
 import { TestContext, APIConfig } from '#/lib/testContext'
 import { Answer, prepareStep } from '#/lib/tsting-types'
 
@@ -155,6 +158,8 @@ function validateSchema<T> (
       `should answer with schema ${JSON.stringify(response.schema)}`,
     )
     const ajv = new Ajv()
+    addFormats(ajv)
+    plugin({ ajv, moment })
     const validate = ajv.compile(response.schema)
     if (!validate(testContext.currentRequest.response?.data)) {
       testContext.log.engine.error('OPS. Invalid response schema')
@@ -295,7 +300,11 @@ export function andStep (testContext: TestContext) {
 
 export async function doneStep (testContext: TestContext) {
   for (const step of testContext.steps) {
-    await step()
+    try {
+      await step()
+    } catch (err) {
+      console.error(err)
+    }
   }
   if (testContext.currentRequest.failed) {
     testContext.log.engine.info("let's continue ....")

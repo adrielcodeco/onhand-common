@@ -20,4 +20,7 @@ async function main () {
   await import(api)
 }
 
-main().catch(console.error)
+main().catch(err => {
+  console.error(err)
+  process.exit(1)
+})

@@ -2,11 +2,14 @@
 import 'reflect-metadata'
 import 'source-map-support/register'
 import yargs from 'yargs'
+import { initCommand } from '#/commands/init'
 import { deployCommand } from '#/commands/deploy'
-import { openApiCommand } from '#/commands/openApi'
-import { serveCommand } from '#/commands/serve'
+import { promoteCommand } from '#/commands/promote'
 import { listRulesCommand } from '#/commands/listRules'
+import { openApiCommand } from '#/commands/openApi'
+import { packCommand } from '#/commands/pack'
 import { seedCommand } from '#/commands/seed'
+import { serveCommand } from '#/commands/serve'
 const { hideBin } = require('yargs/helpers')
 const packageJson = require('../../package.json')
 
@@ -19,6 +22,18 @@ function main () {
       description: 'config file path',
     })
     .command(
+      'init',
+      'Initialize environment on your AWS account',
+      yargs => {
+        // empty
+      },
+      argv => {
+        (async () => {
+          await initCommand(argv.config)
+        })().catch(console.error)
+      },
+    )
+    .command(
       'deploy',
       'Deploys the stack(s) into your AWS account',
       yargs => {
@@ -30,6 +45,18 @@ function main () {
       argv => {
         (async () => {
           await deployCommand(argv.config, { noBuild: !!argv.noBuild })
+        })().catch(console.error)
+      },
+    )
+    .command(
+      'promote',
+      'Promote a stage to another into your AWS account',
+      yargs => {
+        // empty
+      },
+      argv => {
+        (async () => {
+          await promoteCommand(argv.config)
         })().catch(console.error)
       },
     )
@@ -104,6 +131,18 @@ function main () {
       argv => {
         (async () => {
           await seedCommand(argv.config)
+        })().catch(console.error)
+      },
+    )
+    .command(
+      'pack',
+      'create the package',
+      yargs => {
+        // empty
+      },
+      argv => {
+        (async () => {
+          await packCommand(argv.config)
         })().catch(console.error)
       },
     )

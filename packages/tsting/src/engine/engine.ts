@@ -33,7 +33,7 @@ export class Engine {
       await this.setup()
       for (let r = 0; r < (replay ?? 1); r++) {
         for (const test of tests) {
-          await this.run(test)
+          await this.run(test).catch(console.error)
         }
       }
     }
@@ -63,8 +63,8 @@ export class Engine {
       tests = tests.concat(
         apis
           ? files.filter(f =>
-              apis.find(api => new RegExp(api, 'gi').test(path.basename(f))),
-            )
+            apis.find(api => new RegExp(api, 'gi').test(path.basename(f))),
+          )
           : files,
       )
     }

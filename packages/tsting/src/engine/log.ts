@@ -61,6 +61,6 @@ export class Logger {
   }
 
   public runner = {
-    info: (log: string) => this.logger.info(`you - ${colors.yellow(log)}`),
+    info: (log: string) => this.logger.info(`you - ${colors.blue(log)}`),
   }
 }

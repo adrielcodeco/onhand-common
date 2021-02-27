@@ -2,40 +2,51 @@ import fs from 'fs'
 import path from 'path'
 import YAML from 'yaml'
 import { Options } from './options'
-import { Config } from './config'
+import { Config, defaultConfig } from './config'
 
 const defaultOptions: Options = {
   stage: 'dev',
   appName: 'app',
   cwd: process.cwd(),
-  verbose: false,
-  appSrcDir: '',
-  ignoreErrors: false,
-  enableFlagr: false,
-  localstack: false,
-  buildFolder: 'build',
-  buildFiles: ['#', 'package.json'],
+  verbose: defaultConfig.deploy?.verbose!,
+  ignoreErrors: defaultConfig.deploy?.ignoreErrors!,
 }
 
-export function loadConfig (configPath?: string): Options {
+export function loadConfig (
+  { stage }: { stage?: string },
+  configPath?: string,
+): Options {
   if (!configPath) {
     configPath = `${process.cwd()}/onhand.yml`
   }
   try {
+    if (!stage) {
+      stage = defaultOptions.stage
+    }
     const options: Partial<Options> = {}
     const configPathResolved = path.resolve(process.cwd(), configPath)
     options.cwd = path.dirname(configPathResolved)
-    const configFile = fs.readFileSync(configPathResolved, 'utf8')
+    let configFile = fs.readFileSync(configPathResolved, 'utf8')
+    configFile = configFile.replace(/\$\{stage\}/gi, stage)
+    const matchs = configFile.match(/\$\{ENV\.(.+)\}/g) ?? []
+    const envConfigJson = YAML.parse(configFile) as Partial<Config>
+    for (const match of matchs) {
+      const [, env] = match.match(/\$\{ENV\.(.+)\}/) ?? []
+      const envValue = process.env[env] ?? envConfigJson.defaultEnv[env] ?? ''
+      configFile = configFile.replace(
+        new RegExp(`\\$\\{ENV\\.${env}\\}`, 'g'),
+        envValue,
+      )
+    }
     const configJson = YAML.parse(configFile) as Partial<Config>
     options.config = configJson
     if (
       typeof configJson === 'object' &&
       !!configJson &&
-      'build' in configJson &&
-      configJson.build
+      'app' in configJson &&
+      configJson.app
     ) {
-      load(options, ['buildFolder', 'outputFolder'], configJson.build)
-      load(options, ['buildFiles', 'packFiles'], configJson.build)
+      load(configJson.app, ['name', 'appName'], options)
     }
     if (
       typeof configJson === 'object' &&
@@ -43,47 +54,26 @@ export function loadConfig (configPath?: string): Options {
       'deploy' in configJson &&
       configJson.deploy
     ) {
-      load(options, ['appName'], configJson.deploy)
-      load(options, ['verbose'], configJson.deploy)
-      load(options, ['ignoreErrors'], configJson.deploy)
-      load(options, ['localstack'], configJson.deploy)
-      load(options, ['buildFolder'], configJson.deploy)
-    }
-    if (
-      typeof configJson === 'object' &&
-      !!configJson &&
-      'app' in configJson &&
-      configJson.app
-    ) {
-      if (
-        typeof configJson === 'object' &&
-        !!configJson &&
-        'openApi' in configJson.app &&
-        configJson.app.openApi
-      ) {
-        const openApiFilePath = path.resolve(
-          options.cwd,
-          configJson.app.openApi,
-        )
-        options.openApiFilePath = openApiFilePath
-        options.appSrcDir = path.resolve(options.cwd, configJson.app?.src!)
-      }
+      load(configJson.deploy, ['verbose'], options)
+      load(configJson.deploy, ['ignoreErrors'], options)
+      load(configJson.deploy, ['awsProfile'], options)
+      load(configJson.deploy, ['awsRegion'], options)
     }
     const pkgJsonPath = path.resolve(process.cwd(), 'package.json')
     const pkg = fs.readFileSync(pkgJsonPath, 'utf8')
     const packageJson = JSON.parse(pkg)
     options.packageName = packageJson.name
     options.packageVersion = packageJson.version
-    return Object.assign({}, defaultOptions, options)
+    return Object.assign({}, defaultOptions, { stage }, options)
   } catch (err) {
     return defaultOptions
   }
 }
 
 function load (
-  options: Partial<Options>,
-  property: [string, string?],
   from: any,
+  property: [string, string?],
+  options: Partial<Options>,
 ) {
   const originProperty = property[0]
   const destinyProperty = property.length === 1 ? property[0] : property[1]!
