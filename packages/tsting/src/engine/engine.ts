@@ -37,9 +37,13 @@ export class Engine {
         }
       }
     }
-    await this.output()
+    const success = await this.output()
     if (tests.length) {
       await this.teardown()
+    }
+
+    if (!success) {
+      throw 'The test failed, review the logs to fix it'
     }
   }
 
@@ -118,6 +122,8 @@ export class Engine {
       }
     }
     this.logHDiv()
+
+    return totalFailures === 0
   }
 
   async teardown (): Promise<void> {

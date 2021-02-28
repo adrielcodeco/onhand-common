@@ -52,7 +52,10 @@ function main () {
             replay: argv.replay,
             apis: argv.APIs as string[],
           })
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
