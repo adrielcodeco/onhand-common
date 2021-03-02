@@ -198,32 +198,32 @@ function findOperation (context: any, loopContext: any) {
         for (const sec in spec.components!.securitySchemes!) {
           security[sec] = authorized.permissions
             ? authorized.permissions.map(permission => {
-                let [
-                  action,
-                  possession,
-                  resource,
-                  attributes,
-                ] = permission.split(':')
-                if (!action) {
-                  switch (method) {
-                    case HttpMethods[HttpMethods.post]:
-                      action = 'create'
-                      break
-                    case HttpMethods[HttpMethods.get]:
-                      action = 'read'
-                      break
-                    case HttpMethods[HttpMethods.put]:
-                      action = 'update'
-                      break
-                    case HttpMethods[HttpMethods.delete]:
-                      action = 'delete'
-                      break
-                  }
+              let [
+                action,
+                possession,
+                resource,
+                attributes,
+              ] = permission.split(':')
+              if (!action) {
+                switch (method) {
+                  case HttpMethods[HttpMethods.post]:
+                    action = 'create'
+                    break
+                  case HttpMethods[HttpMethods.get]:
+                    action = 'read'
+                    break
+                  case HttpMethods[HttpMethods.put]:
+                    action = 'update'
+                    break
+                  case HttpMethods[HttpMethods.delete]:
+                    action = 'delete'
+                    break
                 }
-                return [action, possession, resource, attributes]
-                  .filter(p => !!p)
-                  .join(':')
-              })
+              }
+              return [action, possession, resource, attributes]
+                .filter(p => !!p)
+                .join(':')
+            })
             : undefined
         }
       }

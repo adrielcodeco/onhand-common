@@ -13,7 +13,7 @@
     "downlevelIteration": true,
     "noFallthroughCasesInSwitch": true,
     "removeComments": false,
-    "preserveConstEnums": false,
+    "preserveConstEnums": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,

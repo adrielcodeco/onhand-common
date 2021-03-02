@@ -26,6 +26,7 @@ export class DeployStack extends cdk.Stack {
     this.options = options
 
     this.updateRoute53Records()
+    this.sow()
   }
 
   // private deployment () {
@@ -72,6 +73,10 @@ export class DeployStack extends cdk.Stack {
   //     },
   //   )
   // }
+
+  private sow () {
+    // empty
+  }
 
   private updateRoute53Records () {
     if (this.options.config?.cloudFront?.api?.zoneName) {

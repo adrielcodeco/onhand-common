@@ -72,7 +72,7 @@ export class AWSFunctionContainerContext {
     const ddb = new dynamoose.aws.sdk.DynamoDB({
       accessKeyId: 'test',
       secretAccessKey: 'test',
-      region: 'us-east-1',
+      region: 'us-east-2',
       endpoint: endpoint,
     })
     dynamoose.aws.ddb.set(ddb)

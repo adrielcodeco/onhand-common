@@ -30,4 +30,6 @@ const schema: ExactlySameKeys<ACRole> = {
 export const ACRoleModelProvider = DyModel<ACRole>(
   `onhand${process.env.STAGE ? '_' : ''}${process.env.STAGE ?? ''}_ACRole`,
   schema,
+  {},
+  '1',
 )

@@ -32,6 +32,7 @@ export class FunctionsStack extends cdk.Stack {
     )
 
     this.createFunctions()
+    this.createSeedFunction()
   }
 
   private createFunctions () {
@@ -97,5 +98,35 @@ export class FunctionsStack extends cdk.Stack {
       }
     }
     Container.set('functions', functions)
+  }
+
+  private createSeedFunction () {
+    const functionName = 'seedFunction'
+    const func = new lambda.Function(this, `func-${functionName}`, {
+      handler: 'index.handler',
+      runtime: lambda.Runtime.NODEJS_12_X,
+      description: `seeds the database - deployed on: ${new Date().toISOString()}`,
+      functionName: resourceName(this.options, functionName, true),
+      code: lambda.Code.fromBucket(
+        this.bucket!,
+        `${this.options.packageName ?? ''}-${
+          this.options.packageVersion ?? ''
+        }/${functionName}.zip`,
+        undefined,
+      ),
+      currentVersionOptions: {
+        description: this.options.packageVersion,
+        removalPolicy: cdk.RemovalPolicy.RETAIN,
+        retryAttempts: 1,
+      },
+      memorySize: 256,
+      reservedConcurrentExecutions: undefined,
+      timeout: cdk.Duration.minutes(15),
+    })
+    if (this.options.packageVersion) {
+      func.currentVersion.addAlias(
+        this.options.packageVersion.replace(/\./g, '_'),
+      )
+    }
   }
 }

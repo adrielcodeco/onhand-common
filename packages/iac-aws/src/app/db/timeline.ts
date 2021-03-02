@@ -28,4 +28,6 @@ const schema = {
 export const TimelineModelProvider = DyModel<Timeline>(
   `onhand${process.env.STAGE ? '_' : ''}${process.env.STAGE ?? ''}_Timeline`,
   schema,
+  {},
+  '1',
 )

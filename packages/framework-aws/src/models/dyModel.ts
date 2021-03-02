@@ -25,12 +25,16 @@ export function DyModel<M> (
         type: String,
         default: async () => {
           if (!ohInternalVersion && !container.isBound('ohInternalVersion')) {
-            throw new Error(ohInternalVersionNotFoundMessage)
+            throw new Error(
+              `entity: ${tableName}. error: ${ohInternalVersionNotFoundMessage}`,
+            )
           }
           const value =
             ohInternalVersion ?? container.get<string>('ohInternalVersion')
           if (!value) {
-            throw new Error(ohInternalVersionNotFoundMessage)
+            throw new Error(
+              `entity: ${tableName}. error: ${ohInternalVersionNotFoundMessage}`,
+            )
           }
           return value
         },

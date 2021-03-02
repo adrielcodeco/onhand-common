@@ -7,5 +7,5 @@
       "$/*": ["tests/*"]
     }
   },
-  "include": ["bin", "src", "tests"]
+  "include": ["bin", "src", "tests", "ejs-loader.js", "seedFunction.js"]
 }

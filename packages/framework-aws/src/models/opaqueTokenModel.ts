@@ -25,4 +25,6 @@ type OpaqueTokenDocument = Document & OpaqueToken
 export const OpaqueTokenModelProvider = DyModel<OpaqueTokenDocument>(
   'OpaqueTokens',
   schema,
+  {},
+  '1',
 )

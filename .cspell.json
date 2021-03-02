@@ -1,6 +1,7 @@
 {
   "version": "0.1",
   "language": "en",
+  "allowCompoundWords": true,
   "ignorePaths": [
     ".cspell.json",
     "**/node_modules/**",
@@ -20,27 +21,23 @@
     "bash"
   ],
   "words": [
-    "accesscontrol",
     "APIV",
     "consts",
     "cxapp",
     "dynamoose",
     "emerg",
-    "envfile",
     "Fargate",
     "flagr",
     "IDTYPE",
     "inversify",
     "jsend",
-    "localstack",
     "onhand",
-    "openapi",
-    "PARAMETERSTOREENDPOINT",
     "pems",
     "pify",
     "printf",
     "tsting",
     "typedi",
-    "Unprocessable"
+    "Unprocessable",
+    "nodir"
   ]
 }

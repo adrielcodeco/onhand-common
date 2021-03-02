@@ -28,9 +28,9 @@ export function loadConfig (
     options.cwd = path.dirname(configPathResolved)
     let configFile = fs.readFileSync(configPathResolved, 'utf8')
     configFile = configFile.replace(/\$\{stage\}/gi, stage)
-    const matchs = configFile.match(/\$\{ENV\.(.+)\}/g) ?? []
+    const matchList = configFile.match(/\$\{ENV\.(.+)\}/g) ?? []
     const envConfigJson = YAML.parse(configFile) as Partial<Config>
-    for (const match of matchs) {
+    for (const match of matchList) {
       const [, env] = match.match(/\$\{ENV\.(.+)\}/) ?? []
       const envValue = process.env[env] ?? envConfigJson.defaultEnv[env] ?? ''
       configFile = configFile.replace(

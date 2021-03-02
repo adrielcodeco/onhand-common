@@ -88,6 +88,9 @@
     "eslint.format.enable": true,
     "eslint.packageManager": "yarn",
     "eslint.nodePath": "./node_modules",
-    "debug.node.autoAttach": "off"
+    "debug.node.autoAttach": "off",
+    "files.associations": {
+      "*.ejs": "text"
+    }
   }
 }

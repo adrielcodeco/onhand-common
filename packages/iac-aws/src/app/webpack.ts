@@ -9,6 +9,7 @@ import {
 } from '@onhand/openapi'
 import { Bundles } from './bundles'
 import { Options } from './options'
+import { getSeedFiles, getConfigPath } from './seed'
 import { getConfigOrDefault } from './config'
 
 export async function compile (options: Options): Promise<Bundles> {
@@ -24,7 +25,20 @@ export async function compile (options: Options): Promise<Bundles> {
 function loadBundles (stats: any): Bundles {
   const bundles: Bundles = []
   if (stats?.compilation?.chunkGroups) {
-    for (const { options, chunks } of stats.compilation.chunkGroups) {
+    const childrenChunks: any[] = []
+    for (const {
+      options: { dependOn },
+    } of stats.compilation.chunkGroups) {
+      for (const chunk of dependOn ?? []) {
+        if (!childrenChunks.includes(chunk)) {
+          childrenChunks.push(chunk)
+        }
+      }
+    }
+    const rootChunkGroups = stats.compilation.chunkGroups.filter(
+      (groups: any) => !childrenChunks.includes(groups.options.name),
+    )
+    for (const { options, chunks } of rootChunkGroups) {
       const entrypoint = options.name
       let entrypointFile = ''
       const files: string[] = []
@@ -38,10 +52,31 @@ function loadBundles (stats: any): Bundles {
           entrypointFile = Array.from(chunkFiles)[0]
         }
         for (const file of chunkFiles) {
-          files.push(file)
+          if (!files.includes(file)) {
+            files.push(file)
+          }
         }
         for (const file of auxiliaryFiles) {
-          files.push(file)
+          if (!files.includes(file)) {
+            files.push(file)
+          }
+        }
+      }
+      for (const dependOn of options.dependOn ?? []) {
+        const group = stats.compilation.chunkGroups.find(
+          (group: any) => group.options.name === dependOn,
+        )
+        for (const chunk of group.chunks) {
+          for (const file of chunk.files) {
+            if (!files.includes(file)) {
+              files.push(file)
+            }
+          }
+          for (const file of chunk.auxiliaryFiles) {
+            if (!files.includes(file)) {
+              files.push(file)
+            }
+          }
         }
       }
       bundles.push({
@@ -78,6 +113,22 @@ async function compileApi (options: Options): Promise<Bundles> {
   }
 
   config.entry = {}
+
+  const configPath = getConfigPath(options)
+  const seedFiles = getSeedFiles(options)
+  if (seedFiles && configPath) {
+    config.entry.seedFunction = {
+      import: path.resolve(__dirname, '../../#/cdk/api/seedFunction.js'),
+      dependOn: seedFiles.map(file => path.basename(file, path.extname(file))),
+    }
+    for (const file of seedFiles) {
+      const fileName = path.basename(file, path.extname(file))
+      config.entry[fileName] = {
+        import: file,
+        filename: `seeds-${fileName}.js`,
+      }
+    }
+  }
 
   const openApiFilePath = path.resolve(
     options.cwd,
@@ -149,8 +200,13 @@ async function compileApi (options: Options): Promise<Bundles> {
     extensions: ['.ts', '.js', '.json'],
   }
 
+  config.resolve.alias = {}
+  if (configPath) {
+    Object.assign(config.resolve.alias, {
+      'seeds/config': configPath,
+    })
+  }
   if (tsconfig?.compilerOptions?.paths) {
-    config.resolve.alias = {}
     for (const _path in tsconfig?.compilerOptions?.paths) {
       const alias = _path.replace('/*', '')
       Object.assign(config.resolve.alias, {
@@ -239,9 +295,9 @@ async function compileSite (options: Options): Promise<Bundles> {
   const config =
     path.extname(webpackConfigPath) === '.js'
       ? webpackConfig.default(
-          {},
-          { mode: options.stage === 'prd' ? 'production' : 'development' },
-        )
+        {},
+        { mode: options.stage === 'prd' ? 'production' : 'development' },
+      )
       : webpackConfig
   if (options.config.build.outputFolder) {
     config.output.path = path.resolve(

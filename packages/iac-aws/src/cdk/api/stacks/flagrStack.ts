@@ -19,7 +19,7 @@ export class FlagrStack extends cdk.Stack {
 
     console.log(this.options.appName)
 
-    const enableFlagr = false // TODO: adicionar o enabled nas configs
+    const enableFlagr = false // TODO: add enabled in configs
 
     if (enableFlagr) {
       this.createMysql()

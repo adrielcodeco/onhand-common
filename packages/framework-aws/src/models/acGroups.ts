@@ -17,4 +17,6 @@ const schema: ExactlySameKeys<Model> = {
 export const ACGroupModelProvider = DyModel<Model>(
   `onhand${process.env.STAGE ? '_' : ''}${process.env.STAGE ?? ''}_ACGroup`,
   schema,
+  {},
+  '1',
 )

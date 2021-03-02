@@ -18,7 +18,7 @@ export class ParameterStoreService implements IParameterStoreService {
   @inject(LogToken)
   private readonly logger!: ILogger
 
-  private readonly ssm: SSM
+  private readonly ssm!: SSM
   private readonly offline: boolean = false
   private readonly offlineParameters!: Array<{
     Version: number
@@ -28,32 +28,39 @@ export class ParameterStoreService implements IParameterStoreService {
   }>
 
   constructor () {
-    let ssmOptions: SSM.Types.ClientConfiguration | undefined
-    if (process.env.PARAMETER_STORE_ENDPOINT) {
-      ssmOptions = {
-        endpoint: process.env.PARAMETER_STORE_ENDPOINT,
+    try {
+      let ssmOptions: SSM.Types.ClientConfiguration | undefined
+      if (process.env.PARAMETER_STORE_ENDPOINT) {
+        ssmOptions = {
+          accessKeyId: 'test',
+          secretAccessKey: 'test',
+          region: 'us-east-2',
+          endpoint: process.env.PARAMETER_STORE_ENDPOINT,
+        }
       }
-    }
-    this.ssm = new SSM(ssmOptions)
+      this.ssm = new SSM(ssmOptions)
 
-    if (process.env.OFFLINE_PARAMETERS) {
-      this.offline = true
-      const offlineParameters = fs.readFileSync(
-        path.resolve(process.cwd(), process.env.OFFLINE_PARAMETERS),
-      )
+      if (process.env.OFFLINE_PARAMETERS) {
+        this.offline = true
+        const offlineParameters = fs.readFileSync(
+          path.resolve(process.cwd(), process.env.OFFLINE_PARAMETERS),
+        )
 
-      this.offlineParameters = String(offlineParameters)
-        .split(os.EOL)
-        .filter(p => !!p)
-        .map(p => {
-          const param = p.split('=')
-          return {
-            Version: 1,
-            Type: 'String',
-            Name: param[0],
-            Value: param[1],
-          }
-        })
+        this.offlineParameters = String(offlineParameters)
+          .split(os.EOL)
+          .filter(p => !!p)
+          .map(p => {
+            const param = p.split('=')
+            return {
+              Version: 1,
+              Type: 'String',
+              Name: param[0],
+              Value: param[1],
+            }
+          })
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
