@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path'
 import glob from 'glob'
 import colors from 'colors/safe'
@@ -31,10 +32,22 @@ export class Engine {
     const tests = this.searchTests(apis)
     if (tests.length) {
       await this.setup()
-      for (let r = 0; r < (replay ?? 1); r++) {
-        for (const test of tests) {
-          await this.run(test).catch(console.error)
+      try {
+        for (let r = 0; r < (replay ?? 1); r++) {
+          for (const test of tests) {
+            try {
+              await this.run(test).catch(console.error)
+            } catch (err) {
+              if (this.config.bailout) {
+                throw err
+              } else {
+                console.error(err)
+              }
+            }
+          }
         }
+      } catch (err) {
+        console.error(err)
       }
     }
     const success = await this.output()
@@ -123,6 +136,10 @@ export class Engine {
     }
     this.logHDiv()
 
+    if (this.config.report) {
+      await this.createJUnitTestResultXml()
+    }
+
     return totalFailures === 0
   }
 
@@ -139,5 +156,16 @@ export class Engine {
     this.logger.log(
       '#########################################################################################',
     )
+  }
+
+  private async createJUnitTestResultXml () {
+    const builder = require('junit-report-builder')
+    const suite = builder.testSuite().name('My suite')
+
+    suite.testCase().className('my.test.Class').name('My first test')
+
+    suite.testCase().className('my.test.Class').name('My second test').failure()
+
+    builder.writeTo('test-report.xml')
   }
 }

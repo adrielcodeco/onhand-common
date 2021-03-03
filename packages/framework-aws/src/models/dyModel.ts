@@ -47,7 +47,10 @@ export function DyModel<M> (
       tableName,
       new Schema(schema, {
         saveUnknown: true,
-        timestamps: true,
+        timestamps: {
+          createdAt: ['createdAt'],
+          updatedAt: ['updatedAt'],
+        },
       }),
       Object.assign({}, defaultOptions, options),
     ) as DyModelType<M>

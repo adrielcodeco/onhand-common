@@ -4,12 +4,13 @@ import YAML from 'yaml'
 
 export type Config = {
   verbose?: boolean
-  bail?: boolean
+  bailout?: boolean
   setup?: string
   testSetup?: string
   teardown?: string
   testRegex?: string[]
   ignore?: string[]
+  report?: boolean
   cwd: string
 }
 
