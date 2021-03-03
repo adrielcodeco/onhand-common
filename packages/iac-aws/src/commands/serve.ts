@@ -1,5 +1,5 @@
-// import path from 'path'
-// import { spawn, ChildProcess } from 'child_process'
+import path from 'path'
+import { spawn, ChildProcess } from 'child_process'
 import { loadConfig } from '#/app/loadConfig'
 import { serve } from '#/app/serve'
 
@@ -13,28 +13,28 @@ export async function serveCommand (
   },
 ) {
   const options = loadConfig({}, configPath)
-  // if (serverOptions?.setupDB) {
-  //   const childProcess: ChildProcess = spawn(
-  //     'node',
-  //     [
-  //       path.resolve(__dirname, '../../bin/iac'),
-  //       'seed',
-  //       ...(configPath ? ['--config', configPath] : []),
-  //     ],
-  //     {
-  //       stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
-  //       cwd: process.cwd(),
-  //       env: {
-  //         ...process.env,
-  //       },
-  //     },
-  //   )
-  //   const code = await new Promise(resolve => {
-  //     childProcess.on('exit', resolve)
-  //   })
-  //   if (code) {
-  //     throw new Error(`seed command exited with ${String(code)} code`)
-  //   }
-  // }
+  if (serverOptions?.setupDB) {
+    const childProcess: ChildProcess = spawn(
+      'node',
+      [
+        path.resolve(__dirname, '../../bin/iac'),
+        'seed',
+        ...(configPath ? ['--config', configPath] : []),
+      ],
+      {
+        stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+        },
+      },
+    )
+    const code = await new Promise(resolve => {
+      childProcess.on('exit', resolve)
+    })
+    if (code) {
+      throw new Error(`seed command exited with ${String(code)} code`)
+    }
+  }
   await serve(options, serverOptions)
 }

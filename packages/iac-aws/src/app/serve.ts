@@ -19,7 +19,6 @@ import {
 import { Options } from '#/app/options'
 import { getConfigOrDefault } from '#/app/config'
 import { build } from '#/app/build'
-import { seed } from '#/app/seed'
 
 const regionId = 'us-east-1'
 const accountId = '1'
@@ -37,9 +36,6 @@ export async function serve (
 ) {
   if (!serverOptions?.noBuild) {
     await build(options)
-  }
-  if (serverOptions?.setupDB) {
-    await seed(options)
   }
   const { localServerPort } = options
   const openApiFilePath = getConfigOrDefault(
