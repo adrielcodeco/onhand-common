@@ -38,7 +38,7 @@ export class Engine {
             try {
               await this.run(test).catch(console.error)
             } catch (err) {
-              if (this.config.bailout) {
+              if (this.config.bail) {
                 throw err
               } else {
                 console.error(err)

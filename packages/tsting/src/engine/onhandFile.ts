@@ -4,7 +4,7 @@ import YAML from 'yaml'
 
 export type Config = {
   verbose?: boolean
-  bailout?: boolean
+  bail?: boolean
   setup?: string
   testSetup?: string
   teardown?: string
