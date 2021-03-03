@@ -1,6 +1,6 @@
 {
   "name": "@onhand/iac-aws",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "> TODO: description",
   "author": "codeco <adrielcodeco@hotmail.com>",
   "homepage": "https://github.com/adrielcodeco/onhand-iac/tree/master/packages/iac-aws#readme",
@@ -75,8 +75,8 @@
     "@aws-cdk/aws-s3-deployment": "^1.91.0",
     "@aws-cdk/cdk": "^0.36.1",
     "@aws-cdk/core": "^1.91.0",
-    "@onhand/common-framework-aws": "^1.0.12",
-    "@onhand/openapi": "^1.0.12",
+    "@onhand/common-framework-aws": "^1.0.13",
+    "@onhand/openapi": "^1.0.13",
     "archiver": "^5.2.0",
     "aws-cdk": "^1.91.0",
     "cdk-assume-role-credential-plugin": "^1.2.2",
