@@ -30,7 +30,10 @@ function main () {
       argv => {
         (async () => {
           await initCommand(argv.config)
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
@@ -41,11 +44,21 @@ function main () {
           describe: 'ignore build step',
           default: '',
         })
+        yargs.positional('stage', {
+          describe: 'the stage that will be deployed',
+          default: 'dev',
+        })
       },
       argv => {
         (async () => {
-          await deployCommand(argv.config, { noBuild: !!argv.noBuild })
-        })().catch(console.error)
+          await deployCommand(argv.config, {
+            noBuild: !!argv.noBuild,
+            stage: argv.stage as string,
+          })
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
@@ -57,7 +70,10 @@ function main () {
       argv => {
         (async () => {
           await promoteCommand(argv.config)
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
@@ -72,7 +88,10 @@ function main () {
       argv => {
         (async () => {
           await openApiCommand(argv.config, String(argv.output))
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
@@ -107,7 +126,10 @@ function main () {
             watch: !!argv.watch,
             setupDB: !!argv.setupDB,
           })
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
@@ -119,7 +141,10 @@ function main () {
       argv => {
         (async () => {
           await listRulesCommand(argv.config)
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
@@ -131,7 +156,10 @@ function main () {
       argv => {
         (async () => {
           await seedCommand(argv.config)
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .command(
@@ -143,7 +171,10 @@ function main () {
       argv => {
         (async () => {
           await packCommand(argv.config)
-        })().catch(console.error)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
       },
     )
     .version(packageJson.version)
