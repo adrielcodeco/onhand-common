@@ -232,6 +232,27 @@
     constructs "^3.2.0"
     punycode "^2.1.1"
 
+"@aws-cdk/aws-databrew@1.91.0":
+  version "1.91.0"
+  resolved "https://registry.npmjs.org/@aws-cdk/aws-databrew/-/aws-databrew-1.91.0.tgz#fbc78037f917bc8431a146fe15221b180416420d"
+  integrity sha512-bNkDbxW+xsLAtkxvGnfHrgGb7eDg6abK+GHZz52qATREXGfJT4BRvcdWbGE8Sx5UlFpSu49rrNsxhhzznxJkhA==
+  dependencies:
+    "@aws-cdk/core" "1.91.0"
+
+"@aws-cdk/aws-dynamodb@1.91.0":
+  version "1.91.0"
+  resolved "https://registry.npmjs.org/@aws-cdk/aws-dynamodb/-/aws-dynamodb-1.91.0.tgz#e5d23102377569f393ce2e521827ff054d3816ac"
+  integrity sha512-DoxE97H/lO25OTCyUZYdFAxa9u1OeH6P9lTv2CJ7+1ivhKqV/tq0abRYKE648v7Q3S9/BNzrdjzLpnOeurNpHA==
+  dependencies:
+    "@aws-cdk/aws-applicationautoscaling" "1.91.0"
+    "@aws-cdk/aws-cloudwatch" "1.91.0"
+    "@aws-cdk/aws-iam" "1.91.0"
+    "@aws-cdk/aws-kms" "1.91.0"
+    "@aws-cdk/aws-lambda" "1.91.0"
+    "@aws-cdk/core" "1.91.0"
+    "@aws-cdk/custom-resources" "1.91.0"
+    constructs "^3.2.0"
+
 "@aws-cdk/aws-ec2@1.91.0", "@aws-cdk/aws-ec2@^1.91.0":
   version "1.91.0"
   resolved "https://registry.npmjs.org/@aws-cdk/aws-ec2/-/aws-ec2-1.91.0.tgz#71c79f189bc405bb83ad9675ca18f881b5ef3b0a"
@@ -338,6 +359,24 @@
     "@aws-cdk/cx-api" "1.91.0"
     constructs "^3.2.0"
 
+"@aws-cdk/aws-eks@1.91.0":
+  version "1.91.0"
+  resolved "https://registry.npmjs.org/@aws-cdk/aws-eks/-/aws-eks-1.91.0.tgz#738529080c0b870bbf07b91d529ad8990c90e80a"
+  integrity sha512-f8Qx3AWVzhWK6/HstAMscuGZ2efnC8BFpqU3tf67zVkyc04YlnTd2et3ipwwDbJZMiH1Wf3VOv4LeQLT0GeTjg==
+  dependencies:
+    "@aws-cdk/aws-autoscaling" "1.91.0"
+    "@aws-cdk/aws-ec2" "1.91.0"
+    "@aws-cdk/aws-iam" "1.91.0"
+    "@aws-cdk/aws-kms" "1.91.0"
+    "@aws-cdk/aws-lambda" "1.91.0"
+    "@aws-cdk/aws-ssm" "1.91.0"
+    "@aws-cdk/core" "1.91.0"
+    "@aws-cdk/custom-resources" "1.91.0"
+    "@aws-cdk/lambda-layer-awscli" "1.91.0"
+    "@aws-cdk/lambda-layer-kubectl" "1.91.0"
+    constructs "^3.2.0"
+    yaml "1.10.0"
+
 "@aws-cdk/aws-elasticloadbalancing@1.91.0":
   version "1.91.0"
   resolved "https://registry.npmjs.org/@aws-cdk/aws-elasticloadbalancing/-/aws-elasticloadbalancing-1.91.0.tgz#4cf439286c5f00801eda5ddb89751b53e8ed1b4a"
@@ -394,6 +433,18 @@
   integrity sha512-t8LSGahCTPgIBUKk1N0Bx35Xvc0nhSHxchtckjXgEBYun6w+85YA5eU9/gTZrpOqTwXt2CbZBDrbem86zsnj8g==
   dependencies:
     "@aws-cdk/aws-iam" "1.91.0"
+    "@aws-cdk/core" "1.91.0"
+    constructs "^3.2.0"
+
+"@aws-cdk/aws-glue@1.91.0":
+  version "1.91.0"
+  resolved "https://registry.npmjs.org/@aws-cdk/aws-glue/-/aws-glue-1.91.0.tgz#c059f5766285bbdca8e90e04c5f56ae4b04aa7e2"
+  integrity sha512-qmYQG258q/RgGWf4ute2Rsq70bCHXuw5HMZLbMVKTAcaVipUkENXinehA1JsRm4uZi/k6QJP965BYMSFt//T5A==
+  dependencies:
+    "@aws-cdk/aws-ec2" "1.91.0"
+    "@aws-cdk/aws-iam" "1.91.0"
+    "@aws-cdk/aws-kms" "1.91.0"
+    "@aws-cdk/aws-s3" "1.91.0"
     "@aws-cdk/core" "1.91.0"
     constructs "^3.2.0"
 
@@ -638,6 +689,32 @@
     "@aws-cdk/core" "1.91.0"
     constructs "^3.2.0"
 
+"@aws-cdk/aws-stepfunctions-tasks@^1.91.0":
+  version "1.91.0"
+  resolved "https://registry.npmjs.org/@aws-cdk/aws-stepfunctions-tasks/-/aws-stepfunctions-tasks-1.91.0.tgz#1ddc5d4043f4686873652d5812c01daa57286533"
+  integrity sha512-5/4HCjKAL4WTtBiUR6NOqd0E/8jjRBBtomdttNSqSfdqBVezCJcsgW4pOa4IQaKiIukA9L4mZmPrJGHEJUL8Vg==
+  dependencies:
+    "@aws-cdk/aws-batch" "1.91.0"
+    "@aws-cdk/aws-cloudwatch" "1.91.0"
+    "@aws-cdk/aws-codebuild" "1.91.0"
+    "@aws-cdk/aws-databrew" "1.91.0"
+    "@aws-cdk/aws-dynamodb" "1.91.0"
+    "@aws-cdk/aws-ec2" "1.91.0"
+    "@aws-cdk/aws-ecr" "1.91.0"
+    "@aws-cdk/aws-ecr-assets" "1.91.0"
+    "@aws-cdk/aws-ecs" "1.91.0"
+    "@aws-cdk/aws-eks" "1.91.0"
+    "@aws-cdk/aws-glue" "1.91.0"
+    "@aws-cdk/aws-iam" "1.91.0"
+    "@aws-cdk/aws-kms" "1.91.0"
+    "@aws-cdk/aws-lambda" "1.91.0"
+    "@aws-cdk/aws-s3" "1.91.0"
+    "@aws-cdk/aws-sns" "1.91.0"
+    "@aws-cdk/aws-sqs" "1.91.0"
+    "@aws-cdk/aws-stepfunctions" "1.91.0"
+    "@aws-cdk/core" "1.91.0"
+    constructs "^3.2.0"
+
 "@aws-cdk/aws-stepfunctions@1.91.0":
   version "1.91.0"
   resolved "https://registry.npmjs.org/@aws-cdk/aws-stepfunctions/-/aws-stepfunctions-1.91.0.tgz#2c536e50a67e8a0124c24c6198b805152c16965d"
@@ -723,6 +800,15 @@
   version "1.91.0"
   resolved "https://registry.npmjs.org/@aws-cdk/lambda-layer-awscli/-/lambda-layer-awscli-1.91.0.tgz#464fff30786366c43d68a253b8d17e71c4777ccc"
   integrity sha512-swfUPdBqYZk3ZzEH4qIjDlZIL6iH/1JhGhpOsx08m9p8uSUhX+hBt59QhgqItQNIs53IvlPov8SlsPzy3Yhy2A==
+  dependencies:
+    "@aws-cdk/aws-lambda" "1.91.0"
+    "@aws-cdk/core" "1.91.0"
+    constructs "^3.2.0"
+
+"@aws-cdk/lambda-layer-kubectl@1.91.0":
+  version "1.91.0"
+  resolved "https://registry.npmjs.org/@aws-cdk/lambda-layer-kubectl/-/lambda-layer-kubectl-1.91.0.tgz#f6f724c01115f8f23e91717c73caccba0a204df6"
+  integrity sha512-c02V6jY3boiKimYjNWD0CmmjTb+V91DxGltYsIwYcGMGqJJPopPverx9RAvt3GgJNMs6JWDG61ayDej8W70yww==
   dependencies:
     "@aws-cdk/aws-lambda" "1.91.0"
     "@aws-cdk/core" "1.91.0"

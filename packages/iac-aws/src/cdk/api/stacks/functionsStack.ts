@@ -128,5 +128,6 @@ export class FunctionsStack extends cdk.Stack {
         this.options.packageVersion.replace(/\./g, '_'),
       )
     }
+    Container.set(`${functionName}Arn`, func.functionArn)
   }
 }

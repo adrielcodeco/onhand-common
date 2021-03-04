@@ -1,12 +1,11 @@
 /* eslint-disable no-new */
 // import path from 'path'
 import * as cdk from '@aws-cdk/core'
-import * as route53 from '@aws-cdk/aws-route53'
-import * as targets from '@aws-cdk/aws-route53-targets'
+import * as lambda from '@aws-cdk/aws-lambda'
+import * as tasks from '@aws-cdk/aws-stepfunctions-tasks'
 // import * as s3 from '@aws-cdk/aws-s3'
-import * as cloudfront from '@aws-cdk/aws-cloudfront'
 // import * as s3Deployment from '@aws-cdk/aws-s3-deployment'
-// import { Container } from 'typedi'
+import { Container } from 'typedi'
 import { Options, resourceName } from '#/app/options'
 // import { getConfigOrDefault } from '#/app/config'
 
@@ -25,7 +24,6 @@ export class DeployStack extends cdk.Stack {
 
     this.options = options
 
-    this.updateRoute53Records()
     this.sow()
   }
 
@@ -75,47 +73,14 @@ export class DeployStack extends cdk.Stack {
   // }
 
   private sow () {
-    // empty
-  }
-
-  private updateRoute53Records () {
-    if (this.options.config?.cloudFront?.api?.zoneName) {
-      const distributionIdExportName = resourceName(
-        this.options,
-        'api-distributionId',
-      )
-      const distributionDomainNameExportName = resourceName(
-        this.options,
-        'api-distributionDomainName',
-      )
-      const distribution = cloudfront.CloudFrontWebDistribution.fromDistributionAttributes(
+    const functionName = 'seedFunction'
+    const functionArn = Container.get<string>(`${functionName}Arn`)
+    new tasks.LambdaInvoke(this, resourceName(this.options, functionName), {
+      lambdaFunction: lambda.Function.fromFunctionArn(
         this,
-        resourceName(this.options, 'dist-api'),
-        {
-          distributionId: cdk.Fn.importValue(distributionIdExportName),
-          domainName: cdk.Fn.importValue(distributionDomainNameExportName),
-        },
-      )
-      const zone = route53.PublicHostedZone.fromLookup(
-        this,
-        resourceName(this.options, 'hz-api'),
-        {
-          domainName: this.options.config?.cloudFront?.api?.zoneName,
-        },
-      )
-      // eslint-disable-next-line no-new
-      new route53.ARecord(
-        this,
-        resourceName(this.options, 'domain-record-api'),
-        {
-          zone: zone,
-          recordName: this.options.config?.cloudFront?.api?.domainName,
-          target: route53.RecordTarget.fromAlias(
-            new targets.CloudFrontTarget(distribution),
-          ),
-          ttl: cdk.Duration.seconds(300),
-        },
-      )
-    }
+        `func-${functionName}`,
+        functionArn,
+      ),
+    })
   }
 }
