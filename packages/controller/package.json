@@ -1,6 +1,6 @@
 {
   "name": "@onhand/common-controller",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "> TODO: description",
   "author": "Codeco <adrielcodeco@hotmail.com>",
   "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/controller#readme",
@@ -26,7 +26,7 @@
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
   },
   "dependencies": {
-    "@onhand/jsend": "^1.0.17",
+    "@onhand/jsend": "^1.0.18",
     "inversify": "^5.0.5"
   },
   "jest": {
