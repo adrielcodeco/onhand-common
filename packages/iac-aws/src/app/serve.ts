@@ -18,7 +18,6 @@ import {
 } from '@onhand/openapi'
 import { Options } from '#/app/options'
 import { getConfigOrDefault } from '#/app/config'
-import { build } from '#/app/build'
 
 const regionId = 'us-east-1'
 const accountId = '1'
@@ -29,14 +28,11 @@ export async function serve (
   options: Options,
   serverOptions?: {
     port: string
-    noBuild: boolean
     watch: boolean
     setupDB: boolean
   },
 ) {
-  if (!serverOptions?.noBuild) {
-    await build(options)
-  }
+  console.log('starting server')
   const { localServerPort } = options
   const openApiFilePath = getConfigOrDefault(
     options.config,

@@ -102,11 +102,6 @@ function main () {
           describe: 'port to listen',
           default: '3000',
         })
-        yargs.option('no-build', {
-          describe: 'ignore build step',
-          boolean: true,
-          default: false,
-        })
         yargs.option('watch', {
           describe: 'watch src files',
           boolean: true,
@@ -122,7 +117,6 @@ function main () {
         (async () => {
           await serveCommand(argv.config, {
             port: argv.port as string,
-            noBuild: !!argv.noBuild,
             watch: !!argv.watch,
             setupDB: !!argv.setupDB,
           })

@@ -14,6 +14,7 @@ export async function seed (options: Options) {
     return
   }
   const { config } = require(configPath)
+  console.log('starting seed runner')
   await seedFiles(files, config)
 }
 
