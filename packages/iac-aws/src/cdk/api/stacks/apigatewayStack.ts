@@ -70,6 +70,10 @@ export class ApiGatewayStack extends cdk.Stack {
       endpointConfiguration: {
         types: [apigateway.EndpointType.EDGE],
       },
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
+        allowMethods: apigateway.Cors.ALL_METHODS,
+      },
     })
     Container.set('restApi', this.api)
     Container.set('restApiId', this.api.restApiId)
