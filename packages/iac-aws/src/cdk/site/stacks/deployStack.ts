@@ -16,8 +16,8 @@ export class DeploySiteStack extends cdk.Stack {
     super(scope, resourceName(options, 'deploy-site'), {
       description: '',
       env: {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region: process.env.CDK_DEFAULT_REGION,
+        account: options.awsAccount,
+        region: options.awsRegion,
       },
     })
 

@@ -19,8 +19,8 @@ export class CloudFrontSiteStack extends cdk.Stack {
     super(scope, resourceName(options, 'cloudfront-site'), {
       description: '',
       env: {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region: process.env.CDK_DEFAULT_REGION,
+        account: options.awsAccount,
+        region: options.awsRegion,
       },
     })
 

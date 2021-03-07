@@ -13,7 +13,7 @@ import { publishAssets } from './s3-upload'
 export async function cdk (options: Options) {
   const argv: Arguments = {
     _: [Command.DEPLOY],
-    region: options.awsProfile,
+    region: options.awsRegion,
     // eslint-disable-next-line node/no-path-concat
     app: `npx ${__dirname}/${options.config?.app?.type}/importer.js`,
     context: [
@@ -29,10 +29,7 @@ export async function cdk (options: Options) {
   await configuration.load()
 
   const sdkProvider = await SdkProvider.withAwsCliCompatibleDefaults({
-    profile:
-      options.awsProfile ??
-      configuration.settings.get(['profile']) ??
-      process.env.AWS_PROFILE,
+    profile: options.awsProfile ?? configuration.settings.get(['profile']),
     ...{ localstack: false },
   })
 

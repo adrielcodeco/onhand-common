@@ -7,6 +7,7 @@ export interface Options {
   packageVersion?: string
   awsProfile?: string
   awsRegion?: string
+  awsAccount?: string
   cwd: string
   verbose: boolean
   ignoreErrors: boolean

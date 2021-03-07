@@ -15,8 +15,8 @@ export class S3SiteStack extends cdk.Stack {
     super(scope, resourceName(options, 's3-site'), {
       description: '',
       env: {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region: process.env.CDK_DEFAULT_REGION,
+        account: options.awsAccount,
+        region: options.awsRegion,
       },
     })
 

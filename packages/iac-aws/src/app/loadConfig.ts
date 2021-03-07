@@ -64,6 +64,7 @@ export function loadConfig (
     const packageJson = JSON.parse(pkg)
     options.packageName = packageJson.name
     options.packageVersion = packageJson.version
+    options.awsRegion = process.env.AWS_REGION ?? configJson.deploy?.awsRegion
     return Object.assign({}, defaultOptions, { stage }, options)
   } catch (err) {
     return defaultOptions

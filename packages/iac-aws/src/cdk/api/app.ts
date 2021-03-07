@@ -24,7 +24,6 @@ function initApp () {
   Container.set('app', app)
 
   promote = app.node.tryGetContext('promote')
-  console.log(promote)
 
   if (!Container.has('options')) {
     const optionsString = app.node.tryGetContext('options')
@@ -36,23 +35,24 @@ function initApp () {
     options = Container.get<Options>('options')
   }
 
-  if (options) {
-    const openApiFilePath = getConfigOrDefault(
-      options.config,
-      c => c.app?.openApi,
-    )
-    if (!openApiFilePath) {
-      throw new Error('OpenAPI class not found')
-    }
-    const openapi = extractOpenAPISpecification(
-      path.resolve(options.cwd, openApiFilePath),
-    )
-    Container.set('openapi', openapi)
-  }
-
   if (!options) {
     throw new Error('invalid options')
   }
+
+  const openApiFilePath = getConfigOrDefault(
+    options.config,
+    c => c.app?.openApi,
+  )
+  if (!openApiFilePath) {
+    throw new Error('OpenAPI class not found')
+  }
+  const openapi = extractOpenAPISpecification(
+    path.resolve(options.cwd, openApiFilePath),
+  )
+  Container.set('openapi', openapi)
+
+  options.awsAccount = app.account ?? process.env.CDK_DEFAULT_ACCOUNT
+  options.awsRegion = app.region ?? process.env.CDK_DEFAULT_REGION
 }
 
 function initStacks () {
@@ -85,9 +85,13 @@ function initStacks () {
 }
 
 function init () {
-  initApp()
-  initStacks()
-  app.synth()
+  try {
+    initApp()
+    initStacks()
+    app.synth()
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 init()
