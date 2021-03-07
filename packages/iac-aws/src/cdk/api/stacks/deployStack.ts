@@ -2,7 +2,8 @@
 // import path from 'path'
 import * as cdk from '@aws-cdk/core'
 import * as lambda from '@aws-cdk/aws-lambda'
-import * as tasks from '@aws-cdk/aws-stepfunctions-tasks'
+import * as logs from '@aws-cdk/aws-logs'
+import * as cr from '@aws-cdk/custom-resources'
 // import * as s3 from '@aws-cdk/aws-s3'
 // import * as s3Deployment from '@aws-cdk/aws-s3-deployment'
 import { Container } from 'typedi'
@@ -75,12 +76,27 @@ export class DeployStack extends cdk.Stack {
   private sow () {
     const functionName = 'seedFunction'
     const functionArn = Container.get<string>(`${functionName}Arn`)
-    new tasks.LambdaInvoke(this, resourceName(this.options, functionName), {
-      lambdaFunction: lambda.Function.fromFunctionArn(
-        this,
-        `func-${functionName}`,
-        functionArn,
-      ),
-    })
+    const func = lambda.Function.fromFunctionArn(
+      this,
+      `func-${functionName}`,
+      functionArn,
+    )
+
+    const funcProvider = new cr.Provider(
+      this,
+      resourceName(this.options, functionName + '-provider'),
+      {
+        onEventHandler: func,
+        logRetention: logs.RetentionDays.ONE_DAY,
+      },
+    )
+
+    new cdk.CustomResource(
+      this,
+      resourceName(this.options, functionName + '-resource'),
+      {
+        serviceToken: funcProvider.serviceToken,
+      },
+    )
   }
 }
