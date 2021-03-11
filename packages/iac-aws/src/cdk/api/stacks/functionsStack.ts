@@ -69,6 +69,17 @@ export class FunctionsStack extends cdk.Stack {
         // const handler = `${srcRelativeFilePath}/${fileName}.${handlerName}`
         const handler = `index.${handlerName}`
         const functionName = operationId ?? className
+        const lambdaARole = new iam.Role(this, `func-${functionName}-role`, {
+          assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+        })
+        lambdaARole.addManagedPolicy(
+          iam.ManagedPolicy.fromAwsManagedPolicyName(
+            'AmazonDynamoDBFullAccess',
+          ),
+        )
+        lambdaARole.addManagedPolicy(
+          iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
+        )
         const func = new lambda.Function(this, `func-${functionName}`, {
           handler,
           runtime: lambda.Runtime.NODEJS_12_X,
@@ -86,6 +97,10 @@ export class FunctionsStack extends cdk.Stack {
             removalPolicy: cdk.RemovalPolicy.RETAIN,
             retryAttempts: 1,
           },
+          environment: {
+            STAGE: this.options.stage,
+          },
+          role: lambdaARole,
           memorySize: 256,
           reservedConcurrentExecutions: undefined,
           timeout: cdk.Duration.minutes(15),
@@ -128,6 +143,9 @@ export class FunctionsStack extends cdk.Stack {
         description: this.options.packageVersion,
         removalPolicy: cdk.RemovalPolicy.RETAIN,
         retryAttempts: 1,
+      },
+      environment: {
+        STAGE: this.options.stage,
       },
       role: lambdaARole,
       memorySize: 256,
