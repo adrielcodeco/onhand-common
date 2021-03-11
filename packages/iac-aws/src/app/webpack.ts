@@ -27,13 +27,22 @@ function loadBundles (stats: any): Bundles {
   if (stats?.compilation?.chunkGroups) {
     const childrenChunks: any[] = []
     for (const {
-      options: { dependOn },
+      options: { dependOn, name },
     } of stats.compilation.chunkGroups) {
       for (const chunk of dependOn ?? []) {
         if (!childrenChunks.includes(chunk)) {
           childrenChunks.push(chunk)
         }
       }
+      stats?.compilation?.chunkGroups
+        .filter((groups: any) =>
+          String(groups.options.name).startsWith(`${name}-`),
+        )
+        .forEach((groups: any) => {
+          if (!childrenChunks.includes(groups.options.name)) {
+            childrenChunks.push(groups.options.name)
+          }
+        })
     }
     const rootChunkGroups = stats.compilation.chunkGroups.filter(
       (groups: any) => !childrenChunks.includes(groups.options.name),
@@ -42,8 +51,19 @@ function loadBundles (stats: any): Bundles {
       const entrypoint = options.name
       let entrypointFile = ''
       const files: string[] = []
+      const loadFiles = (filesToLoad: any[]) => {
+        for (const file of filesToLoad) {
+          if (!files.includes(file)) {
+            files.push(file)
+          }
+        }
+      }
+      const loadChunkFiles = (chunk: any) => {
+        loadFiles(chunk.files)
+        loadFiles(chunk.auxiliaryFiles)
+      }
       for (const chunk of chunks) {
-        const { id, files: chunkFiles, auxiliaryFiles } = chunk as {
+        const { id, files: chunkFiles } = chunk as {
           id: string
           files: Set<string>
           auxiliaryFiles: Set<string>
@@ -51,32 +71,23 @@ function loadBundles (stats: any): Bundles {
         if (id === options.name) {
           entrypointFile = Array.from(chunkFiles)[0]
         }
-        for (const file of chunkFiles) {
-          if (!files.includes(file)) {
-            files.push(file)
-          }
-        }
-        for (const file of auxiliaryFiles) {
-          if (!files.includes(file)) {
-            files.push(file)
-          }
-        }
+        loadChunkFiles(chunk)
       }
       for (const dependOn of options.dependOn ?? []) {
         const group = stats.compilation.chunkGroups.find(
           (group: any) => group.options.name === dependOn,
         )
         for (const chunk of group.chunks) {
-          for (const file of chunk.files) {
-            if (!files.includes(file)) {
-              files.push(file)
-            }
-          }
-          for (const file of chunk.auxiliaryFiles) {
-            if (!files.includes(file)) {
-              files.push(file)
-            }
-          }
+          loadChunkFiles(chunk)
+        }
+      }
+      const relatedChunks = stats?.compilation?.chunkGroups.filter(
+        (groups: any) =>
+          String(groups.options.name).startsWith(`${entrypoint}-`),
+      )
+      for (const { chunks } of relatedChunks) {
+        for (const chunk of chunks) {
+          loadChunkFiles(chunk)
         }
       }
       bundles.push({
@@ -117,15 +128,18 @@ async function compileApi (options: Options): Promise<Bundles> {
   const configPath = getConfigPath(options)
   const seedFiles = getSeedFiles(options)
   if (seedFiles && configPath) {
-    config.entry.seedFunction = {
-      import: path.resolve(__dirname, '../../#/cdk/api/seedFunction.js'),
-      dependOn: seedFiles.map(file => path.basename(file, path.extname(file))),
-    }
+    config.entry['onhand-seed-function'] = path.resolve(
+      __dirname,
+      '../cdk/api/seedFunction.js',
+    )
     for (const file of seedFiles) {
-      const fileName = path.basename(file, path.extname(file))
+      const fileName = `onhand-seed-function-${path.basename(
+        file,
+        path.extname(file),
+      )}`
       config.entry[fileName] = {
         import: file,
-        filename: `seeds-${fileName}.js`,
+        filename: `${fileName}.js`,
       }
     }
   }
@@ -222,6 +236,11 @@ async function compileApi (options: Options): Promise<Bundles> {
   }
 
   config.module = {
+    parser: {
+      javascript: {
+        commonjsMagicComments: true,
+      },
+    },
     rules: [
       {
         test: /\.[tj]s$/i,

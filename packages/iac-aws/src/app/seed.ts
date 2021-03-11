@@ -13,7 +13,7 @@ export async function seed (options: Options) {
   if (!files) {
     return
   }
-  const { config } = require(configPath)
+  const { config } = require(/* webpackIgnore: true */ configPath)
   console.log('starting seed runner')
   await seedFiles(files, config)
 }
@@ -63,7 +63,7 @@ export async function seedFiles (files: string[], config: any) {
       console.log(`onHand - OLD ${fileName}`)
       continue
     }
-    const { sow } = require(file)
+    const { sow } = require(/* webpackIgnore: true */ file)
     await sow()
     await TimelineModel.create({
       id: `seed#${fileName}`,

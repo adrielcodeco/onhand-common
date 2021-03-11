@@ -1,14 +1,14 @@
-import path from 'path'
-import glob from 'glob'
-import { seedFiles } from '#/app/seed'
-// @ts-expect-error
-import { config } from 'seeds/config'
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require('path')
+const glob = require('glob')
+const { seedFiles } = require('../../app/seed')
+const { config } = require('seeds/config')
 
 async function seed () {
   try {
     const files = glob
-      .sync('seeds-*.js', { cwd: __dirname, nodir: true })
-      .map(file => path.resolve(__dirname, file))
+      .sync('onhand-seed-function-*.js', { cwd: __dirname, nodir: true })
+      .map((file: any) => path.resolve(__dirname, file))
     await seedFiles(files, config)
   } catch (err) {
     console.error(err)
@@ -16,7 +16,7 @@ async function seed () {
   }
 }
 
-export default async function (event: any) {
+export async function handler (event: any) {
   try {
     switch (event.RequestType) {
       case 'Create':

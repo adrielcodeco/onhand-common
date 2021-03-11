@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core'
 import * as lambda from '@aws-cdk/aws-lambda'
 import * as s3 from '@aws-cdk/aws-s3'
 // import path from 'path'
+import * as iam from '@aws-cdk/aws-iam'
 import { Container } from 'typedi'
 import { OpenAPIV3 } from 'openapi-types'
 import { Options, resourceName } from '#/app/options'
@@ -101,7 +102,16 @@ export class FunctionsStack extends cdk.Stack {
   }
 
   private createSeedFunction () {
-    const functionName = 'seedFunction'
+    const functionName = 'onhand-seed-function'
+    const lambdaARole = new iam.Role(this, `func-${functionName}-role`, {
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+    })
+    lambdaARole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess'),
+    )
+    lambdaARole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
+    )
     const func = new lambda.Function(this, `func-${functionName}`, {
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -119,6 +129,7 @@ export class FunctionsStack extends cdk.Stack {
         removalPolicy: cdk.RemovalPolicy.RETAIN,
         retryAttempts: 1,
       },
+      role: lambdaARole,
       memorySize: 256,
       reservedConcurrentExecutions: undefined,
       timeout: cdk.Duration.minutes(15),

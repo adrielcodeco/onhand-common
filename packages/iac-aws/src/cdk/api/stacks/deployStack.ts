@@ -74,7 +74,7 @@ export class DeployStack extends cdk.Stack {
   // }
 
   private sow () {
-    const functionName = 'seedFunction'
+    const functionName = 'onhand-seed-function'
     const functionArn = Container.get<string>(`${functionName}Arn`)
     const func = lambda.Function.fromFunctionArn(
       this,
