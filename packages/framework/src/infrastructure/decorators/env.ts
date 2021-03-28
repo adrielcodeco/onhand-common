@@ -1,8 +1,10 @@
-export function Env (key: string) {
+export function Env (key?: string) {
   return (target: any, propertyKey: string) => {
-    Object.defineProperty(target, key, {
+    Object.defineProperty(target, propertyKey, {
       get () {
-        return process.env[key] ?? this[`${propertyKey}-defaultValue`]
+        return (
+          process.env[key ?? propertyKey] ?? this[`${propertyKey}-defaultValue`]
+        )
       },
       set (newValue) {
         this[`${propertyKey}-defaultValue`] = newValue

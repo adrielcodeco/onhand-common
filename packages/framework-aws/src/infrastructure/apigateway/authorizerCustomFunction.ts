@@ -38,6 +38,9 @@ export abstract class AuthorizerCustomFunction implements IAuthorizerFunction {
       scope = this.findWithCaseInsensitive(event.headers, 'scope')
       deviceId = this.findWithCaseInsensitive(event.headers, 'deviceId')
     }
+    if (authorizationToken) {
+      authorizationToken = authorizationToken.replace(/Bearer\s/i, '')
+    }
     return {
       authorizationToken,
       scope,

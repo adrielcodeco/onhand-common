@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core'
 import * as apigateway from '@aws-cdk/aws-apigateway'
 import * as lambda from '@aws-cdk/aws-lambda'
+import * as cr from '@aws-cdk/custom-resources'
 import * as iam from '@aws-cdk/aws-iam'
 import * as s3 from '@aws-cdk/aws-s3'
 import Container, { Service } from 'typedi'
@@ -45,6 +46,7 @@ export class ApiGatewayStack extends cdk.Stack {
     this.createApiGateway()
     this.createAuthorizerFunction()
     this.createRoutes()
+    this.disableApigatewayDefaultEndpoint()
   }
 
   private createRole () {
@@ -111,6 +113,15 @@ export class ApiGatewayStack extends cdk.Stack {
       const { className, handlerName } = manageFunctionMetadata(sec).get()
       const handler = `index.${handlerName}`
       const functionName = className
+      const lambdaARole = new iam.Role(this, `func-${functionName}-role`, {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      })
+      lambdaARole.addManagedPolicy(
+        iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess'),
+      )
+      lambdaARole.addManagedPolicy(
+        iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
+      )
       const authorizerFunc = new lambda.Function(
         this,
         resourceName(this.options, functionName),
@@ -130,6 +141,10 @@ export class ApiGatewayStack extends cdk.Stack {
             removalPolicy: cdk.RemovalPolicy.RETAIN,
             retryAttempts: 1,
           },
+          environment: {
+            STAGE: this.options.stage,
+          },
+          role: lambdaARole,
           memorySize: 128,
           reservedConcurrentExecutions: undefined,
           timeout: cdk.Duration.seconds(10),
@@ -230,5 +245,35 @@ export class ApiGatewayStack extends cdk.Stack {
         authorizer: authorizer ? this.authorizers.get(authorizer) : undefined,
       },
     )
+  }
+
+  private disableApigatewayDefaultEndpoint () {
+    const executeApi = resourceName(this.options, 'api-execute-api-resource')
+    const executeApiResource = new cr.AwsCustomResource(this, executeApi, {
+      functionName: 'disable-execute-api-endpoint',
+      onCreate: {
+        service: 'APIGateway',
+        action: 'updateRestApi',
+        parameters: {
+          restApiId: this.api.restApiId,
+          patchOperations: [
+            {
+              op: 'replace',
+              path: '/disableExecuteApiEndpoint',
+              value: 'True',
+            },
+          ],
+        },
+        physicalResourceId: cr.PhysicalResourceId.of(executeApi),
+      },
+      policy: cr.AwsCustomResourcePolicy.fromStatements([
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['apigateway:PATCH'],
+          resources: ['arn:aws:apigateway:*::/*'],
+        }),
+      ]),
+    })
+    executeApiResource.node.addDependency(this.api)
   }
 }

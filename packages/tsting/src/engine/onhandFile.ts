@@ -1,6 +1,5 @@
-import fs from 'fs'
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path'
-import YAML from 'yaml'
 
 export type Config = {
   verbose?: boolean
@@ -16,14 +15,14 @@ export type Config = {
 
 export function loadOnhandFile (filePath?: string): Config {
   if (!filePath) {
-    filePath = path.resolve(process.cwd(), './onhand.yml')
+    filePath = path.resolve(process.cwd(), './onhand.ts')
   }
   if (!path.isAbsolute(filePath)) {
     filePath = path.resolve(process.cwd(), filePath)
   }
   const cwd = path.dirname(filePath)
-  const fileContent = fs.readFileSync(filePath, 'utf8')
-  const configJson = YAML.parse(fileContent)
+  const getConfig = require(filePath).default
+  const configJson = getConfig({ env: 'dev' })
   if ('test' in configJson) {
     return {
       ...configJson.test,

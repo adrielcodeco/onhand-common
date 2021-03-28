@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import fs from 'fs'
 import path from 'path'
-import YAML from 'yaml'
 import { Options } from './options'
 import { Config, defaultConfig } from './config'
 
@@ -17,7 +17,7 @@ export function loadConfig (
   configPath?: string,
 ): Options {
   if (!configPath) {
-    configPath = `${process.cwd()}/onhand.yml`
+    configPath = `${process.cwd()}/onhand.ts`
   }
   try {
     if (!stage) {
@@ -26,19 +26,8 @@ export function loadConfig (
     const options: Partial<Options> = {}
     const configPathResolved = path.resolve(process.cwd(), configPath)
     options.cwd = path.dirname(configPathResolved)
-    let configFile = fs.readFileSync(configPathResolved, 'utf8')
-    configFile = configFile.replace(/\$\{stage\}/gi, stage)
-    const matchList = configFile.match(/\$\{ENV\.(.+)\}/g) ?? []
-    const envConfigJson = YAML.parse(configFile) as Partial<Config>
-    for (const match of matchList) {
-      const [, env] = match.match(/\$\{ENV\.(.+)\}/) ?? []
-      const envValue = process.env[env] ?? envConfigJson.defaultEnv[env] ?? ''
-      configFile = configFile.replace(
-        new RegExp(`\\$\\{ENV\\.${env}\\}`, 'g'),
-        envValue,
-      )
-    }
-    const configJson = YAML.parse(configFile) as Partial<Config>
+    const getConfig = require(configPathResolved).default
+    const configJson: Partial<Config> = getConfig({ stage }) as Partial<Config>
     options.config = configJson
     if (
       typeof configJson === 'object' &&
@@ -67,6 +56,7 @@ export function loadConfig (
     options.awsRegion = process.env.AWS_REGION ?? configJson.deploy?.awsRegion
     return Object.assign({}, defaultOptions, { stage }, options)
   } catch (err) {
+    console.error(err)
     return defaultOptions
   }
 }

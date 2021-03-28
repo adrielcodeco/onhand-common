@@ -37,7 +37,10 @@ export async function initSSM (): Promise<void> {
     ssm = await fetchParams()
     inMemoryCacheService.set('ssm', ssm)
     for (const param of ssm) {
-      container.bind(Symbol.for(param.name)).toConstantValue(param.value)
+      if (container.isBound(param.name)) {
+        container.unbind(param.name)
+      }
+      container.bind(param.name).toConstantValue(param.value)
     }
   }
 }

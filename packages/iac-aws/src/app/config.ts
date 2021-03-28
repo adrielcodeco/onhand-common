@@ -4,22 +4,32 @@ type PartialDeep<T> = {
 
 export type Config = {
   app: {
-    projectName: string
+    projectName?: string
     name: string
     type: 'api' | 'site'
     src?: string
     openApi?: string
   }
-  db: {
+  db?: {
     config?: string
     migrations?: string
     seeds?: string
   }
+  test?: {
+    verbose?: boolean
+    bail?: boolean
+    setup?: string
+    testSetup?: string
+    teardown?: string
+    testRegex?: string[]
+    ignore?: string[]
+    report?: boolean
+  }
   build: {
-    webpack?: string
+    webpack?: string | any
     outputFolder?: string
   }
-  package: {
+  package?: {
     name?: string
     files?: Array<string | { root: string, pattern: string }>
     outputFolder?: string
@@ -31,13 +41,13 @@ export type Config = {
     awsRegion?: string
     files?: Array<string | { root: string, pattern: string }>
   }
-  cloudFront: {
-    site: {
+  cloudFront?: {
+    site?: {
       zoneName?: string
       domainAliases?: string[]
       certificateId?: string
     }
-    api: {
+    api?: {
       zoneName?: string
       domainName?: string
       certificateId?: string
@@ -46,7 +56,6 @@ export type Config = {
       }
     }
   }
-  defaultEnv: any
 }
 
 export const defaultConfig: PartialDeep<Config> = {

@@ -92,6 +92,7 @@
     "lodash": "^4.17.21",
     "openapi-types": "^7.2.3",
     "reflect-metadata": "^0.1.13",
+    "require-context": "^1.1.0",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",
     "ts-loader": "^8.0.17",
@@ -99,7 +100,6 @@
     "typescript": "^4.2.3",
     "webpack": "^5.24.3",
     "winston": "^3.3.3",
-    "yaml": "^1.10.0",
     "yargs": "^16.2.0"
   },
   "devDependencies": {

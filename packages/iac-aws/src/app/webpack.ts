@@ -1,6 +1,7 @@
 import path from 'path'
 import webpack from 'webpack'
 import rimraf from 'rimraf'
+import _ from 'lodash'
 import { OpenAPIV3 } from 'openapi-types'
 import {
   isHttpMethod,
@@ -259,7 +260,17 @@ async function compileApi (options: Options): Promise<Bundles> {
     splitChunks: { chunks: 'all' },
   }
 
-  const compiler = webpack(config)
+  const mergedConfig = _.mergeWith(
+    config,
+    options.config?.build?.webpack ?? {},
+    (objValue, srcValue) => {
+      if (_.isArray(objValue)) {
+        return objValue.concat(srcValue)
+      }
+      return undefined
+    },
+  )
+  const compiler = webpack(mergedConfig)
 
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {

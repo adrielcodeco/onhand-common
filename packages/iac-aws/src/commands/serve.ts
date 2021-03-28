@@ -17,6 +17,7 @@ export async function serveCommand (
     await execa(
       'node',
       [
+        '--trace-warnings',
         path.resolve(__dirname, '../../bin/iac'),
         'seed',
         ...(configPath ? ['--config', configPath] : []),
