@@ -15,9 +15,6 @@ export class ParameterStoreService implements IParameterStoreService {
   @inject(IInMemoryCacheServiceToken)
   private readonly cache!: IInMemoryCacheService
 
-  @inject(LogToken)
-  private readonly logger!: ILogger
-
   private readonly ssm!: SSM
   private readonly offline: boolean = false
   private readonly offlineParameters!: Array<{
@@ -27,7 +24,7 @@ export class ParameterStoreService implements IParameterStoreService {
     Value: string
   }>
 
-  constructor () {
+  constructor (@inject(LogToken) private readonly logger: ILogger) {
     try {
       let ssmOptions: SSM.Types.ClientConfiguration | undefined
       if (process.env.PARAMETER_STORE_ENDPOINT) {
@@ -60,7 +57,7 @@ export class ParameterStoreService implements IParameterStoreService {
           })
       }
     } catch (err) {
-      console.error(err)
+      this.logger.error(err)
     }
   }
 
@@ -127,7 +124,7 @@ export class ParameterStoreService implements IParameterStoreService {
       }
       return parameters
     }
-    this.logger.log('GETTING PARAMETER STORES', keys)
+    this.logger.debug('GETTING PARAMETER STORES', keys)
     const params = {
       Names: keys,
       WithDecryption: true,
