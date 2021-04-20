@@ -8,34 +8,54 @@ import {
   S3SiteStack,
 } from '#/cdk/site/stacks'
 
-const app = new core.App()
-Container.set('app', app)
+let app: core.App
+let options: Options
+// let promote: boolean
 
-// const promote = app.node.tryGetContext('promote')
+function initApp () {
+  app = new core.App()
+  Container.set('app', app)
 
-let options: Options | undefined
-if (!Container.has('options')) {
-  const optionsString = app.node.tryGetContext('options')
-  if (optionsString) {
-    options = JSON.parse(optionsString) as Options
-    Container.set('options', options)
+  // promote = app.node.tryGetContext('promote')
+
+  if (!Container.has('options')) {
+    const optionsString = app.node.tryGetContext('options')
+    if (optionsString) {
+      options = JSON.parse(optionsString) as Options
+      Container.set('options', options)
+    }
+  } else {
+    options = Container.get<Options>('options')
   }
-} else {
-  options = Container.get<Options>('options')
+
+  if (!options) {
+    throw new Error('invalid options')
+  }
+
+  options.awsAccount = app.account ?? process.env.CDK_DEFAULT_ACCOUNT
+  options.awsRegion = app.region ?? process.env.CDK_DEFAULT_REGION
 }
 
-if (!options) {
-  throw new Error('invalid options')
+function initStacks () {
+  // Assets
+  new S3SiteStack(app, options)
+
+  // cloudfront
+  const cloudfront = new CloudFrontSiteStack(app, options)
+
+  // deploy
+  const deploy = new DeploySiteStack(app, options)
+  deploy.addDependency(cloudfront)
 }
 
-// Assets
-new S3SiteStack(app, options)
+function init () {
+  try {
+    initApp()
+    initStacks()
+    app.synth()
+  } catch (err) {
+    console.error(err)
+  }
+}
 
-// cloudfront
-const cloudfront = new CloudFrontSiteStack(app, options)
-
-// deploy
-const deploy = new DeploySiteStack(app, options)
-deploy.addDependency(cloudfront)
-
-app.synth()
+init()
