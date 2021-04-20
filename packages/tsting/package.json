@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "ajv": "^7.0.0",
-    "ajv-formats": "^1.5.1",
+    "ajv-formats": "^2.0.2",
     "ajv-moment": "^2.0.6",
     "axios": "^0.21.1",
     "junit-report-builder": "^3.0.0",
