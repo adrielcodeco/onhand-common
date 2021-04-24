@@ -16,6 +16,7 @@ import { CheckGrantUseCase } from '@onhand/common-business-aws/#/useCases/access
 import { AWSFunctionContainerContext } from '#/infrastructure/awsFunctionContainerContext'
 import { AWSFunctionHandleContext } from '#/infrastructure/awsFunctionHandleContext'
 import { Output } from '#/infrastructure/apigateway/apigatewayOutput'
+import { CORS } from '#/infrastructure/apigateway/apigatewayCORS'
 import { Ownership } from '@onhand/common-business/#/ownership'
 import { UserContext } from '@onhand/common-business/#/dto/userContext'
 
@@ -171,7 +172,9 @@ export abstract class ApiGatewayFunction extends AFunction {
       }
       const operation = container.resolve<Operation>(this.operation)
       const result = await operation.run(input)
-      return Output(result)
+      const headers = {}
+      CORS(event.headers, headers)
+      return Output(result, headers)
     } catch (err) {
       return Output(err)
     }

@@ -5,7 +5,10 @@ import { Response, InternalServerError } from '@onhand/jsend'
 import { container } from '@onhand/common-business/#/ioc/container'
 import { ILogger, LogToken } from '@onhand/common-business/#/modules/logger'
 
-export function Output (out: Response<any>): APIGatewayProxyResult {
+export function Output (
+  out: Response<any>,
+  headers: { [name: string]: string } = {},
+): APIGatewayProxyResult {
   if (out instanceof Error) {
     const id = short.generate()
     logError(id, out)
@@ -24,10 +27,7 @@ export function Output (out: Response<any>): APIGatewayProxyResult {
   }
   return {
     statusCode: metadata?.statusCode ?? '500',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-    },
+    headers,
     multiValueHeaders: undefined,
     body: JSON.stringify(out),
     isBase64Encoded: false,
