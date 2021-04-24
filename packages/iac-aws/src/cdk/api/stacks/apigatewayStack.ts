@@ -73,8 +73,20 @@ export class ApiGatewayStack extends cdk.Stack {
         types: [apigateway.EndpointType.EDGE],
       },
       defaultCorsPreflightOptions: {
-        allowOrigins: apigateway.Cors.ALL_ORIGINS,
-        allowMethods: apigateway.Cors.ALL_METHODS,
+        allowCredentials:
+          this.options.config?.apiGateway?.accessControlAllowCredentials ===
+          undefined
+            ? true
+            : this.options.config?.apiGateway?.accessControlAllowCredentials,
+        allowOrigins:
+          this.options.config?.apiGateway?.accessControlAllowOrigin ??
+          apigateway.Cors.ALL_ORIGINS,
+        allowMethods:
+          this.options.config?.apiGateway?.accessControlAllowMethods ??
+          apigateway.Cors.ALL_METHODS,
+        allowHeaders: apigateway.Cors.DEFAULT_HEADERS.concat(
+          this.options.config?.apiGateway?.accessControlAllowHeaders ?? [],
+        ),
       },
     })
     Container.set('restApi', this.api)

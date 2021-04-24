@@ -56,6 +56,12 @@ export type Config = {
       }
     }
   }
+  apiGateway?: {
+    accessControlAllowOrigin: string[]
+    accessControlAllowMethods: string[]
+    accessControlAllowHeaders: string[]
+    accessControlAllowCredentials: boolean
+  }
 }
 
 export const defaultConfig: PartialDeep<Config> = {
