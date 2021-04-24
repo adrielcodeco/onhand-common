@@ -7,6 +7,7 @@ import { deployCommand } from '#/commands/deploy'
 import { promoteCommand } from '#/commands/promote'
 import { listRulesCommand } from '#/commands/listRules'
 import { openApiCommand } from '#/commands/openApi'
+import { buildCommand } from '#/commands/build'
 import { packCommand } from '#/commands/pack'
 import { seedCommand } from '#/commands/seed'
 import { serveCommand } from '#/commands/serve'
@@ -150,6 +151,21 @@ function main () {
       argv => {
         (async () => {
           await seedCommand(argv.config)
+        })().catch(err => {
+          console.error(err)
+          process.exit(1)
+        })
+      },
+    )
+    .command(
+      'build',
+      'build',
+      yargs => {
+        // empty
+      },
+      argv => {
+        (async () => {
+          await buildCommand(argv.config)
         })().catch(err => {
           console.error(err)
           process.exit(1)

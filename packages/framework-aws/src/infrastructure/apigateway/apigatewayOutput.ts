@@ -24,7 +24,10 @@ export function Output (out: Response<any>): APIGatewayProxyResult {
   }
   return {
     statusCode: metadata?.statusCode ?? '500',
-    headers: undefined,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
     multiValueHeaders: undefined,
     body: JSON.stringify(out),
     isBase64Encoded: false,
