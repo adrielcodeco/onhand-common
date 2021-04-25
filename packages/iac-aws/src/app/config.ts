@@ -57,10 +57,10 @@ export type Config = {
     }
   }
   apiGateway?: {
-    accessControlAllowOrigin: string[]
-    accessControlAllowMethods: string[]
-    accessControlAllowHeaders: string[]
-    accessControlAllowCredentials: boolean
+    accessControlAllowOrigin?: string[]
+    accessControlAllowMethods?: string[]
+    accessControlAllowHeaders?: string[]
+    accessControlAllowCredentials?: boolean
   }
 }
 
