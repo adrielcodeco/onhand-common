@@ -81,7 +81,7 @@ export class FunctionsStack extends cdk.Stack {
         const lambdaARole = new iam.Role(this, `func-${functionName}-role`, {
           assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         })
-        for (const policy of policies) {
+        for (const policy of policies ?? []) {
           if ('managedPolicy' in policy) {
             lambdaARole.addManagedPolicy(
               iam.ManagedPolicy.fromAwsManagedPolicyName(policy.managedPolicy),

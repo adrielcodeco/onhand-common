@@ -269,14 +269,13 @@ function setOperationMetadata (context: any, loopContext: any) {
   } = loopContext
 
   if (handlerMetadata && operation) {
-    const functionMetadata = merge(
-      {
+    manageFunctionMetadata(operation)
+      .merge(manageFunctionMetadata(module).get() ?? {})
+      .merge(handlerMetadata)
+      .merge({
         functionFileAbsolutePath: absoluteFilePath,
         handlerName: module.name,
-      },
-      handlerMetadata,
-    )
-    manageFunctionMetadata(operation).merge(functionMetadata)
+      })
   }
 }
 
