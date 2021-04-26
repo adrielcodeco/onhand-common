@@ -156,7 +156,7 @@ function findAuthorizers (context: any, loopContext: any) {
           },
           { ...authorizerMetadata, openapi: undefined },
         )
-        manageFunctionMetadata(authorizerMetadata.openapi).set(
+        manageFunctionMetadata(authorizerMetadata.openapi).merge(
           openapiAuthorizerMetadata,
         )
       }
@@ -276,7 +276,7 @@ function setOperationMetadata (context: any, loopContext: any) {
       },
       handlerMetadata,
     )
-    manageFunctionMetadata(operation).set(functionMetadata)
+    manageFunctionMetadata(operation).merge(functionMetadata)
   }
 }
 

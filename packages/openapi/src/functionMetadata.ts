@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import { merge } from 'lodash'
 
 const symbolOnhandAPIFunctionMetadata = Symbol.for(
   'onhand-api-function-metadata',
@@ -22,6 +23,14 @@ export function manageFunctionMetadata<FM extends FunctionMetadata> (func: any) 
     },
     set: (metadata: FM) => {
       Reflect.defineMetadata(symbolOnhandAPIFunctionMetadata, metadata, func)
+      return _
+    },
+    merge: (metadataPart: FM) => {
+      Reflect.defineMetadata(
+        symbolOnhandAPIFunctionMetadata,
+        merge(metadata ?? {}, metadataPart ?? {}),
+        func,
+      )
       return _
     },
     change: (change: (metadata: FM) => FM) => {

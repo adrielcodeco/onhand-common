@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
+export function as<R = any> (obj: any): R {
+  return obj
+}
+
 export type Ctor<T> = { new (...args: any): T }
 
 export type PickProperties<T, P> = Pick<

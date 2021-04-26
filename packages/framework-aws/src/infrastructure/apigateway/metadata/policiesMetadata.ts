@@ -2,6 +2,7 @@ import {
   manageFunctionMetadata,
   FunctionMetadata,
 } from '@onhand/openapi/#/functionMetadata'
+import { as } from '@onhand/utils'
 
 export type Policy =
   | {
@@ -21,6 +22,9 @@ export function addPolicy (FunctionClass: any, ...policies: Policy[]) {
   manageFunctionMetadata<FunctionMetadata & PoliciesMetadata>(
     FunctionClass,
   ).change(metadata => {
+    if (!metadata) {
+      metadata = as<FunctionMetadata & PoliciesMetadata>({})
+    }
     if (!metadata.policies) {
       metadata.policies = []
     }
