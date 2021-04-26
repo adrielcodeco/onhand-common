@@ -1,6 +1,6 @@
 {
   "name": "@onhand/common-framework-aws",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "> TODO: description",
   "author": "Codeco <adrielcodeco@hotmail.com>",
   "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/framework-aws#readme",
@@ -26,12 +26,12 @@
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
   },
   "dependencies": {
-    "@onhand/common-business": "^1.0.34",
-    "@onhand/common-business-aws": "^1.0.34",
-    "@onhand/common-controller": "^1.0.34",
-    "@onhand/common-framework": "^1.0.34",
-    "@onhand/openapi": "^1.0.34",
-    "@onhand/utils": "^1.0.34",
+    "@onhand/common-business": "^1.0.35",
+    "@onhand/common-business-aws": "^1.0.35",
+    "@onhand/common-controller": "^1.0.35",
+    "@onhand/common-framework": "^1.0.35",
+    "@onhand/openapi": "^1.0.35",
+    "@onhand/utils": "^1.0.35",
     "accesscontrol": "^2.2.1",
     "amazon-cognito-identity-js": "^4.5.12",
     "aws-lambda": "^1.0.6",
