@@ -4,27 +4,27 @@ const symbolOnhandAPIFunctionMetadata = Symbol.for(
   'onhand-api-function-metadata',
 )
 
-type FunctionMetadata = {
+export type FunctionMetadata = {
   functionFileAbsolutePath: string
   provider: string
   className: string
   handlerName: string
 }
 
-export function manageFunctionMetadata (func: any) {
-  const metadata: FunctionMetadata = Reflect.getMetadata(
+export function manageFunctionMetadata<FM extends FunctionMetadata> (func: any) {
+  const metadata: FM = Reflect.getMetadata(
     symbolOnhandAPIFunctionMetadata,
     func,
   )
   const _ = {
-    get: (): FunctionMetadata => {
+    get: (): FM => {
       return metadata
     },
-    set: (metadata: FunctionMetadata) => {
+    set: (metadata: FM) => {
       Reflect.defineMetadata(symbolOnhandAPIFunctionMetadata, metadata, func)
       return _
     },
-    change: (change: (metadata: FunctionMetadata) => FunctionMetadata) => {
+    change: (change: (metadata: FM) => FM) => {
       Reflect.defineMetadata(
         symbolOnhandAPIFunctionMetadata,
         change(metadata),
@@ -32,13 +32,7 @@ export function manageFunctionMetadata (func: any) {
       )
       return _
     },
-    changeKey: <
-      P extends keyof FunctionMetadata,
-      T extends FunctionMetadata[P]
-    >(
-      key: P,
-      value: T,
-    ) => {
+    changeKey: <P extends keyof FM, T extends FM[P]>(key: P, value: T) => {
       if (!metadata) {
         throw new Error('metadata not exits')
       }
@@ -46,7 +40,7 @@ export function manageFunctionMetadata (func: any) {
       Reflect.defineMetadata(symbolOnhandAPIFunctionMetadata, metadata, func)
       return _
     },
-    delete: <P extends keyof FunctionMetadata>(key: P) => {
+    delete: <P extends keyof FM>(key: P) => {
       if (!metadata) {
         throw new Error('metadata not exits')
       }

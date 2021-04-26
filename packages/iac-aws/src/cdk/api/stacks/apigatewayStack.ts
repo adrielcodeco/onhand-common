@@ -88,14 +88,6 @@ export class ApiGatewayStack extends cdk.Stack {
           this.options.config?.apiGateway?.accessControlAllowHeaders ?? [],
         ),
       },
-      policy: new iam.PolicyDocument({
-        statements: [
-          new iam.PolicyStatement({
-            resources: this.functions.map(f => f.function.functionArn),
-            actions: ['lambda:InvokeFunction'],
-          }),
-        ],
-      }),
     })
     Container.set('restApi', this.api)
     Container.set('restApiId', this.api.restApiId)

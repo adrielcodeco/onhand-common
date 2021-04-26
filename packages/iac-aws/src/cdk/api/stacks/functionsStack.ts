@@ -6,7 +6,13 @@ import * as iam from '@aws-cdk/aws-iam'
 import { Container } from 'typedi'
 import { OpenAPIV3 } from 'openapi-types'
 import { Options, resourceName } from '#/app/options'
-import { isHttpMethod, manageFunctionMetadata } from '@onhand/openapi'
+import {
+  isHttpMethod,
+  manageFunctionMetadata,
+  FunctionMetadata,
+} from '@onhand/openapi'
+// eslint-disable-next-line max-len
+import { PoliciesMetadata } from '@onhand/common-framework-aws/#/infrastructure/apigateway/metadata/policiesMetadata'
 
 export class FunctionsStack extends cdk.Stack {
   private readonly options: Options
@@ -60,7 +66,10 @@ export class FunctionsStack extends cdk.Stack {
           // functionFileAbsolutePath: absoluteFilePath,
           className,
           handlerName,
-        } = manageFunctionMetadata(operation).get()
+          policies,
+        } = manageFunctionMetadata<FunctionMetadata & PoliciesMetadata>(
+          operation,
+        ).get()
         // const { appSrcDir } = this.options
         // const fileExt = path.extname(absoluteFilePath)
         // const fileName = path.basename(absoluteFilePath, fileExt)
@@ -72,14 +81,32 @@ export class FunctionsStack extends cdk.Stack {
         const lambdaARole = new iam.Role(this, `func-${functionName}-role`, {
           assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         })
-        lambdaARole.addManagedPolicy(
-          iam.ManagedPolicy.fromAwsManagedPolicyName(
-            'AmazonDynamoDBFullAccess',
-          ),
-        )
-        lambdaARole.addManagedPolicy(
-          iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
-        )
+        for (const policy of policies) {
+          if ('managedPolicy' in policy) {
+            lambdaARole.addManagedPolicy(
+              iam.ManagedPolicy.fromAwsManagedPolicyName(policy.managedPolicy),
+            )
+          }
+          if ('inlinePolicy' in policy) {
+            lambdaARole.attachInlinePolicy(
+              new iam.Policy(
+                this,
+                `policy-${functionName}-${policies.indexOf(policy)}`,
+                {
+                  document: new iam.PolicyDocument({
+                    statements: [
+                      new iam.PolicyStatement({
+                        actions: policy.inlinePolicy.actions,
+                        effect: policy.inlinePolicy.effect as any,
+                        resources: policy.inlinePolicy.resources,
+                      }),
+                    ],
+                  }),
+                },
+              ),
+            )
+          }
+        }
         const func = new lambda.Function(this, `func-${functionName}`, {
           handler,
           runtime: lambda.Runtime.NODEJS_12_X,
