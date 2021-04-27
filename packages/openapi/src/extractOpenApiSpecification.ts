@@ -249,7 +249,7 @@ function findHandlerMetadata (context: any, loopContext: any) {
     module: any
   } = loopContext
 
-  if (!handlerMetadata) {
+  if (!handlerMetadata && module.isHandler) {
     handlerMetadata = Reflect.getMetadata(symbolOnhandHandlerMetadata, module)
     Object.assign(loopContext, { handlerMetadata })
   }
@@ -268,14 +268,19 @@ function setOperationMetadata (context: any, loopContext: any) {
     module: any
   } = loopContext
 
-  if (handlerMetadata && operation) {
-    manageFunctionMetadata(operation)
-      .merge(manageFunctionMetadata(module).get() ?? {})
-      .merge(handlerMetadata)
-      .merge({
-        functionFileAbsolutePath: absoluteFilePath,
-        handlerName: module.name,
-      })
+  if (operation) {
+    if (handlerMetadata) {
+      manageFunctionMetadata(operation).merge(handlerMetadata)
+    }
+    if (module.isFunction) {
+      const functionMetadata = manageFunctionMetadata(module).get()
+      manageFunctionMetadata(operation)
+        .merge(functionMetadata ?? {})
+        .merge({
+          functionFileAbsolutePath: absoluteFilePath,
+          handlerName: module.name,
+        })
+    }
   }
 }
 
