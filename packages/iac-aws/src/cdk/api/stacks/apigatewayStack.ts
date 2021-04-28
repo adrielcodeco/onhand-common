@@ -247,7 +247,7 @@ export class ApiGatewayStack extends cdk.Stack {
       method,
       new apigateway.LambdaIntegration(routeLambda.function, {
         proxy: true,
-        allowTestInvoke: false,
+        allowTestInvoke: true,
       }),
       {
         operationName: functionName,
