@@ -233,6 +233,7 @@ export function shouldAnswerStep<T> (
       headers: testContext.api.headers,
       data: testContext.currentRequest.body,
       validateStatus: () => true,
+      timeout: 1000 * 60,
     })
     testContext.currentRequest.response = result
     validateStatus(testContext, response, tag)
