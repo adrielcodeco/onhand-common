@@ -3,6 +3,7 @@ import * as lambda from '@aws-cdk/aws-lambda'
 import * as s3 from '@aws-cdk/aws-s3'
 // import path from 'path'
 import * as iam from '@aws-cdk/aws-iam'
+import * as logs from '@aws-cdk/aws-logs'
 import { Container } from 'typedi'
 import { OpenAPIV3 } from 'openapi-types'
 import { Options, resourceName } from '#/app/options'
@@ -12,7 +13,10 @@ import {
   FunctionMetadata,
 } from '@onhand/openapi'
 // eslint-disable-next-line max-len
-import { PoliciesMetadata } from '@onhand/common-framework-aws/#/infrastructure/apigateway/metadata/policiesMetadata'
+import {
+  PoliciesMetadata,
+  Policy,
+} from '@onhand/common-framework-aws/#/infrastructure/apigateway/metadata/policiesMetadata'
 
 export class FunctionsStack extends cdk.Stack {
   private readonly options: Options
@@ -78,17 +82,32 @@ export class FunctionsStack extends cdk.Stack {
         // const handler = `${srcRelativeFilePath}/${fileName}.${handlerName}`
         const handler = `index.${handlerName}`
         const functionName = operationId ?? className
-        const lambdaARole = new iam.Role(this, `func-${functionName}-role`, {
+        const lambdaRole = new iam.Role(this, `func-${functionName}-role`, {
           assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         })
-        for (const policy of policies ?? []) {
+        const logPolicy: Policy = {
+          inlinePolicy: {
+            actions: ['logs:*'],
+            effect: 'Allow',
+            resources: [
+              `arn:aws:logs:${this.region}:${
+                this.account
+              }:log-group:/aws/lambda/${resourceName(
+                this.options,
+                functionName,
+                true,
+              )}:*`,
+            ],
+          },
+        }
+        for (const policy of (policies ?? []).concat([logPolicy])) {
           if ('managedPolicy' in policy) {
-            lambdaARole.addManagedPolicy(
+            lambdaRole.addManagedPolicy(
               iam.ManagedPolicy.fromAwsManagedPolicyName(policy.managedPolicy),
             )
           }
           if ('inlinePolicy' in policy) {
-            lambdaARole.attachInlinePolicy(
+            lambdaRole.attachInlinePolicy(
               new iam.Policy(
                 this,
                 `policy-${functionName}-${policies.indexOf(policy)}`,
@@ -127,7 +146,8 @@ export class FunctionsStack extends cdk.Stack {
           environment: {
             STAGE: this.options.stage,
           },
-          role: lambdaARole,
+          logRetention: logs.RetentionDays.ONE_WEEK,
+          role: lambdaRole,
           memorySize: 256,
           reservedConcurrentExecutions: undefined,
           timeout: cdk.Duration.minutes(15),
