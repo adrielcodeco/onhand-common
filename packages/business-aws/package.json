@@ -1,6 +1,6 @@
 {
   "name": "@onhand/common-business-aws",
-  "version": "1.0.40",
+  "version": "1.0.41",
   "description": "> TODO: description",
   "author": "Codeco <adrielcodeco@hotmail.com>",
   "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/business-aws#readme",
@@ -26,8 +26,8 @@
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
   },
   "dependencies": {
-    "@onhand/common-business": "^1.0.40",
-    "@onhand/common-domain-aws": "^1.0.40",
+    "@onhand/common-business": "^1.0.41",
+    "@onhand/common-domain-aws": "^1.0.41",
     "inversify": "^5.0.5"
   },
   "jest": {
