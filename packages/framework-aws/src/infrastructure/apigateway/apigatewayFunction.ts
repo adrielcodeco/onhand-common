@@ -19,6 +19,8 @@ import { Output } from '#/infrastructure/apigateway/apigatewayOutput'
 import { CORS } from '#/infrastructure/apigateway/apigatewayCORS'
 import { Ownership } from '@onhand/common-business/#/ownership'
 import { UserContext } from '@onhand/common-business/#/dto/userContext'
+import { ILogger, LogToken } from '@onhand/common-business/#/modules/logger'
+import { inject } from 'inversify'
 
 export type AWSFunctionOptions = {
   permissions?: ACRule[]
@@ -37,6 +39,7 @@ export abstract class ApiGatewayFunction extends AFunction {
   ownership?: Ctor<Ownership<any>>
 
   constructor (
+    @inject(LogToken) private readonly logger: ILogger,
     private readonly options: AWSFunctionOptions,
     private containerContextInitialization: AWSFunctionContainerContext,
     private handleContextInitialization: AWSFunctionHandleContext<E>,
@@ -127,6 +130,7 @@ export abstract class ApiGatewayFunction extends AFunction {
   ): Promise<APIGatewayProxyResult> {
     assert(this.operation)
     try {
+      this.logger.debug(event)
       if (container.isBound('stage')) {
         container.rebind('stage').toConstantValue(event.stageVariables?.stage)
       } else {
@@ -179,7 +183,9 @@ export abstract class ApiGatewayFunction extends AFunction {
       const result = await operation.run(input)
       const headers = {}
       CORS(event.headers, headers)
-      return Output(result, headers)
+      const output = Output(result, headers)
+      this.logger.debug(output)
+      return output
     } catch (err) {
       return Output(err)
     }

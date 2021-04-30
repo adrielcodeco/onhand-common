@@ -10,8 +10,9 @@ export function CORS (
   }
 
   if (!('Access-Control-Allow-Origin' in headers)) {
-    const incomingOrigin = incomingHeaders.origin ?? incomingHeaders.Origin
-    result['Access-Control-Allow-Origin'] = credentials ? incomingOrigin : '*'
+    const incomingOrigin = incomingHeaders?.origin ?? incomingHeaders?.Origin
+    result['Access-Control-Allow-Origin'] =
+      credentials && incomingOrigin ? incomingOrigin : '*'
   }
 
   Object.assign(headers, result)
