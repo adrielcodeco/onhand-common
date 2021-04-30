@@ -38,8 +38,10 @@ export abstract class ApiGatewayFunction extends AFunction {
   httpMethod: HttpMethods = HttpMethods.GET
   ownership?: Ctor<Ownership<any>>
 
+  @inject(LogToken)
+  private readonly logger!: ILogger
+
   constructor (
-    @inject(LogToken) private readonly logger: ILogger,
     private readonly options: AWSFunctionOptions,
     private containerContextInitialization: AWSFunctionContainerContext,
     private handleContextInitialization: AWSFunctionHandleContext<E>,

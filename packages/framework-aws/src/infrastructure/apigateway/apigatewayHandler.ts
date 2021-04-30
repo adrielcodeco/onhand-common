@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import { ApiGatewayFunction } from '#/infrastructure/apigateway/apigatewayFunction'
 import { session } from '@onhand/common-framework/#/services/sessionService'
+import { container } from '@onhand/common-business/#/ioc/container'
 import { Ctor, as } from '@onhand/utils'
 
 const symbolOnhandHandlerMetadata = Symbol.for('onhand-handler-metadata')
@@ -10,7 +11,7 @@ type FunctionClassType = Ctor<ApiGatewayFunction>
 export function apiGatewayHandler (
   FunctionClass: FunctionClassType,
 ): (event: any) => any {
-  const lambda = new FunctionClass()
+  const lambda = container.resolve(FunctionClass)
   const containerContext = lambda.init()
   const handler = async (event: any) => {
     return new Promise((resolve, reject) => {
