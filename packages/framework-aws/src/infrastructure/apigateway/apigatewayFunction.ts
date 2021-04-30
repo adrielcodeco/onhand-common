@@ -127,7 +127,11 @@ export abstract class ApiGatewayFunction extends AFunction {
   ): Promise<APIGatewayProxyResult> {
     assert(this.operation)
     try {
-      container.rebind('stage').toConstantValue(event.stageVariables?.stage)
+      if (container.isBound('stage')) {
+        container.rebind('stage').toConstantValue(event.stageVariables?.stage)
+      } else {
+        container.bind('stage').toConstantValue(event.stageVariables?.stage)
+      }
       await this.handleContextInitialization.init(event)
       const input = await this.inputAdapter(event)
       let hasOwnership = false
