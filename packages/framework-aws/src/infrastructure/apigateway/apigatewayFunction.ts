@@ -20,7 +20,7 @@ import { CORS } from '#/infrastructure/apigateway/apigatewayCORS'
 import { Ownership } from '@onhand/common-business/#/ownership'
 import { UserContext } from '@onhand/common-business/#/dto/userContext'
 import { ILogger, LogToken } from '@onhand/common-business/#/modules/logger'
-import { inject } from 'inversify'
+import { inject, injectable } from 'inversify'
 
 export type AWSFunctionOptions = {
   permissions?: ACRule[]
@@ -29,6 +29,7 @@ export type AWSFunctionOptions = {
 
 type E = APIGatewayProxyEvent
 
+@injectable()
 export abstract class ApiGatewayFunction extends AFunction {
   abstract get inputAdapterType (): any
   abstract get operation (): Ctor<Operation>
