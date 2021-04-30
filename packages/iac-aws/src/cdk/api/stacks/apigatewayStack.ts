@@ -65,6 +65,9 @@ export class ApiGatewayStack extends cdk.Stack {
       restApiName,
       deployOptions: {
         stageName: this.options.stage,
+        variables: {
+          stage: this.options.stage,
+        },
         loggingLevel: apigateway.MethodLoggingLevel.INFO,
         metricsEnabled: true,
         dataTraceEnabled: true,
