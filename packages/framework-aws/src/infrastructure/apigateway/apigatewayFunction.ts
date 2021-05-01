@@ -72,7 +72,7 @@ export abstract class ApiGatewayFunction extends AFunction {
     const InputAdapterType = this.inputAdapterType
     const parameterMetadata = manageParameterMetadata(this).get()
     if (parameterMetadata?.body) {
-      Object.assign(input, event.body)
+      Object.assign(input, JSON.parse(event.body ?? '{}'))
     }
     if (parameterMetadata?.query) {
       Object.assign(
