@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "openapi-types": "^7.2.3",
+    "openapi-types": "^8.0.0",
     "reflect-metadata": "^0.1.13"
   },
   "jest": {
