@@ -3,6 +3,7 @@ import * as apigateway from '@aws-cdk/aws-apigateway'
 import * as lambda from '@aws-cdk/aws-lambda'
 import * as cr from '@aws-cdk/custom-resources'
 import * as iam from '@aws-cdk/aws-iam'
+import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as s3 from '@aws-cdk/aws-s3'
 import Container, { Service } from 'typedi'
 import { OpenAPIV3 } from 'openapi-types'
@@ -62,6 +63,26 @@ export class ApiGatewayStack extends cdk.Stack {
   }
 
   private createApiGateway () {
+    const domainNamePart: any = {}
+    if (this.options.config?.cloudFront?.api?.domainName) {
+      const certificateArn = ` arn:aws:acm:us-east-1:${
+        this.account
+      }:certificate/${
+        this.options.config?.cloudFront?.api?.certificateId ?? ''
+      }`
+      const certificate = acm.Certificate.fromCertificateArn(
+        this,
+        resourceName(this.options, 'cert'),
+        certificateArn,
+      )
+      domainNamePart.domainName = {
+        domainName: this.options.config?.cloudFront?.api?.domainName,
+        certificate: certificate,
+        endpointType: apigateway.EndpointType.EDGE,
+        securityPolicy: apigateway.SecurityPolicy.TLS_1_2,
+      }
+    }
+
     const restApiName = resourceName(this.options, 'api')
     this.api = new apigateway.RestApi(this, restApiName, {
       restApiName,
@@ -74,6 +95,7 @@ export class ApiGatewayStack extends cdk.Stack {
         metricsEnabled: true,
         dataTraceEnabled: true,
       },
+      ...domainNamePart,
       endpointConfiguration: {
         types: [apigateway.EndpointType.EDGE],
       },

@@ -7,7 +7,7 @@ import { getConfigOrDefault } from '#/app/config'
 import { extractOpenAPISpecification } from '@onhand/openapi/#/extractOpenApiSpecification'
 import {
   ApiGatewayStack,
-  CloudFrontStack,
+  // CloudFrontStack,
   // CognitoStack,
   DeployStack,
   // FlagrStack,
@@ -76,12 +76,13 @@ function initStacks () {
   // apiGatewayStack.addDependency(cognitoStack)
 
   // cloudfront
-  const cloudfront = new CloudFrontStack(app, options)
-  cloudfront.addDependency(apiGatewayStack)
+  // const cloudfront = new CloudFrontStack(app, options)
+  // cloudfront.addDependency(apiGatewayStack)
 
   // deploy
   const deploy = new DeployStack(app, options)
-  deploy.addDependency(cloudfront)
+  deploy.addDependency(apiGatewayStack)
+  // deploy.addDependency(cloudfront)
 }
 
 function init () {
