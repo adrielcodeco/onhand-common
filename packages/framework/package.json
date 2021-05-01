@@ -1,6 +1,6 @@
 {
   "name": "@onhand/common-framework",
-  "version": "1.0.53",
+  "version": "1.0.54",
   "description": "> TODO: description",
   "author": "Codeco <adrielcodeco@hotmail.com>",
   "homepage": "https://github.com/adrielcodeco/onhand-common/tree/master/packages/framework#readme",
@@ -26,9 +26,9 @@
     "url": "https://github.com/adrielcodeco/onhand-common/issues"
   },
   "dependencies": {
-    "@onhand/accesscontrol": "^1.0.53",
-    "@onhand/common-business": "^1.0.53",
-    "@onhand/openapi": "^1.0.53",
+    "@onhand/accesscontrol": "^1.0.54",
+    "@onhand/common-business": "^1.0.54",
+    "@onhand/openapi": "^1.0.54",
     "axios": "^0.21.1",
     "class-validator": "^0.13.1",
     "cls-hooked": "^4.2.2",
