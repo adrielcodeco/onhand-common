@@ -46,7 +46,9 @@ export class ApiGatewayStack extends cdk.Stack {
     this.createApiGateway()
     this.createAuthorizerFunction()
     this.createRoutes()
-    this.disableApigatewayDefaultEndpoint()
+    if (this.options.stage === 'prd') {
+      this.disableApigatewayDefaultEndpoint()
+    }
   }
 
   private createRole () {
