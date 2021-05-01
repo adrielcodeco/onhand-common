@@ -10,15 +10,15 @@ type FunctionClassType = Ctor<ApiGatewayFunction>
 
 export function apiGatewayHandler (
   FunctionClass: FunctionClassType,
-): (event: any) => any {
+): (event: any, context: any) => any {
   const lambda = container.resolve(FunctionClass)
   const containerContext = lambda.init()
-  const handler = async (event: any) => {
+  const handler = async (event: any, context: any) => {
     return new Promise((resolve, reject) => {
       session.run(() => {
         (async () => {
           await containerContext
-          return lambda.handle(event)
+          return lambda.handle(event, context)
         })()
           .then(resolve)
           .catch(reject)
