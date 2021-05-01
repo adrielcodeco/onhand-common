@@ -1,6 +1,10 @@
 import { assert } from 'console'
 import { validate } from 'class-validator'
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Context,
+} from 'aws-lambda'
 import { Operation } from '@onhand/common-controller/#/operation'
 import { container } from '@onhand/common-business/#/ioc/container'
 import {
@@ -130,10 +134,12 @@ export abstract class ApiGatewayFunction extends AFunction {
 
   public async handle (
     event: APIGatewayProxyEvent,
+    context: Context,
   ): Promise<APIGatewayProxyResult> {
     assert(this.operation)
     try {
       this.logger.debug(event)
+      this.logger.debug(context)
       if (container.isBound('stage')) {
         container.rebind('stage').toConstantValue(event.stageVariables?.stage)
       } else {
