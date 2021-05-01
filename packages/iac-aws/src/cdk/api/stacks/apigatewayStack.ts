@@ -5,6 +5,8 @@ import * as cr from '@aws-cdk/custom-resources'
 import * as iam from '@aws-cdk/aws-iam'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as s3 from '@aws-cdk/aws-s3'
+import * as route53 from '@aws-cdk/aws-route53'
+import * as targets from '@aws-cdk/aws-route53-targets'
 import Container, { Service } from 'typedi'
 import { OpenAPIV3 } from 'openapi-types'
 import { Options, resourceName } from '#/app/options'
@@ -47,6 +49,7 @@ export class ApiGatewayStack extends cdk.Stack {
     this.createApiGateway()
     this.createAuthorizerFunction()
     this.createRoutes()
+    this.updateRoute53Records()
     if (this.options.stage === 'prd') {
       this.disableApigatewayDefaultEndpoint()
     }
@@ -314,5 +317,30 @@ export class ApiGatewayStack extends cdk.Stack {
       ]),
     })
     executeApiResource.node.addDependency(this.api)
+  }
+
+  private updateRoute53Records () {
+    if (this.options.config?.cloudFront?.api?.zoneName) {
+      const zone = route53.PublicHostedZone.fromLookup(
+        this,
+        resourceName(this.options, 'hz-api'),
+        {
+          domainName: this.options.config?.cloudFront?.api?.zoneName,
+        },
+      )
+      // eslint-disable-next-line no-new
+      new route53.ARecord(
+        this,
+        resourceName(this.options, 'domain-record-api'),
+        {
+          zone: zone,
+          recordName: this.options.config?.cloudFront?.api?.domainName,
+          target: route53.RecordTarget.fromAlias(
+            new targets.ApiGateway(this.api),
+          ),
+          ttl: cdk.Duration.seconds(300),
+        },
+      )
+    }
   }
 }
