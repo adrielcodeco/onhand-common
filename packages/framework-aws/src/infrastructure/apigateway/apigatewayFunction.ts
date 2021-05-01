@@ -89,6 +89,7 @@ export abstract class ApiGatewayFunction extends AFunction {
     }
     const inputAdapter = new InputAdapterType()
     Object.assign(inputAdapter, input)
+    this.logger.debug('input:', inputAdapter)
     const errors = await validate(inputAdapter, {
       skipUndefinedProperties: false,
       skipNullProperties: false,
@@ -138,8 +139,8 @@ export abstract class ApiGatewayFunction extends AFunction {
   ): Promise<APIGatewayProxyResult> {
     assert(this.operation)
     try {
-      this.logger.debug(event)
-      this.logger.debug(context)
+      this.logger.debug('event:', event)
+      this.logger.debug('context:', context)
       if (container.isBound('stage')) {
         container.rebind('stage').toConstantValue(event.stageVariables?.stage)
       } else {
@@ -193,10 +194,12 @@ export abstract class ApiGatewayFunction extends AFunction {
       const headers = {}
       CORS(event.headers, headers)
       const output = Output(result, headers)
-      this.logger.debug(output)
+      this.logger.debug('output:', output)
       return output
     } catch (err) {
-      return Output(err)
+      const output = Output(err)
+      this.logger.debug('output:', output)
+      return output
     }
   }
 }
