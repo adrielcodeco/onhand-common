@@ -286,7 +286,7 @@ function makeProxyEvent (
     multiValueQueryStringParameters,
     pathParameters,
     stageVariables,
-    body: req.body,
+    body: JSON.stringify(req.body),
     isBase64Encoded: false,
   }
   return event
