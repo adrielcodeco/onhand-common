@@ -1,0 +1,26 @@
+{
+  "name": "@onahd/dashboard",
+  "version": "1.0.54",
+  "description": "> TODO: description",
+  "author": "Codeco <adriel.codeco@raizen.com>",
+  "homepage": "https://github.com/adrielcodeco/onhand-common/tree/main/packages/dashboard#readme",
+  "license": "ISC",
+  "main": "lib/dashboard.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrielcodeco/onhand-common.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/adrielcodeco/onhand-common/issues"
+  }
+}
