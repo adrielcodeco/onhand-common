@@ -21,10 +21,6 @@
       "path": "packages/controller"
     },
     {
-      "name": "📦 @onahd/dashboard",
-      "path": "packages/dashboard"
-    },
-    {
       "name": "📦 @onhand/common-domain-aws",
       "path": "packages/domain-aws"
     },

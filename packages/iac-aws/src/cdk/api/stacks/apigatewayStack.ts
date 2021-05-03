@@ -4,7 +4,6 @@ import * as lambda from '@aws-cdk/aws-lambda'
 import * as cr from '@aws-cdk/custom-resources'
 import * as iam from '@aws-cdk/aws-iam'
 import * as acm from '@aws-cdk/aws-certificatemanager'
-import * as s3 from '@aws-cdk/aws-s3'
 import * as route53 from '@aws-cdk/aws-route53'
 import * as targets from '@aws-cdk/aws-route53-targets'
 import Container, { Service } from 'typedi'
@@ -16,7 +15,6 @@ import { isHttpMethod, manageFunctionMetadata } from '@onhand/openapi'
 export class ApiGatewayStack extends cdk.Stack {
   private readonly options: Options
   private readonly openapi: OpenAPIV3.Document
-  private readonly bucket?: s3.IBucket
   private apiResource!: apigateway.IResource
   private apiGatewayRole!: iam.Role
   private api!: apigateway.RestApi
@@ -34,12 +32,6 @@ export class ApiGatewayStack extends cdk.Stack {
 
     this.options = options
     this.openapi = Container.get<OpenAPIV3.Document>('openapi')
-    const s3AssetsArn = Container.get<string>('s3-api')
-    this.bucket = s3.Bucket.fromBucketArn(
-      this,
-      resourceName(this.options, 's3-api', true),
-      s3AssetsArn,
-    )
 
     this.createRole()
     this.createApiGateway()
