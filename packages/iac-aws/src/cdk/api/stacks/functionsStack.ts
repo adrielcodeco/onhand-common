@@ -1,3 +1,4 @@
+/* eslint-disable no-new */
 import * as cdk from '@aws-cdk/core'
 import * as lambda from '@aws-cdk/aws-lambda'
 import * as s3 from '@aws-cdk/aws-s3'
@@ -43,11 +44,11 @@ export class FunctionsStack extends cdk.Stack {
     )
 
     this.createFunctions()
+    this.createAuthorizerFunctions()
     this.createSeedFunction()
   }
 
   private createFunctions () {
-    const functions = []
     for (const routePath in this.openapi.paths) {
       if (
         !Object.prototype.hasOwnProperty.call(this.openapi.paths, routePath)
@@ -157,10 +158,95 @@ export class FunctionsStack extends cdk.Stack {
             this.options.packageVersion.replace(/\./g, '_'),
           )
         }
-        functions.push({ function: func, functionName })
       }
     }
-    Container.set('functions', functions)
+  }
+
+  private createAuthorizerFunctions () {
+    for (const secKey in this.openapi.components?.securitySchemes ?? {}) {
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          this.openapi.components?.securitySchemes!,
+          secKey,
+        )
+      ) {
+        continue
+      }
+      const sec = this.openapi.components?.securitySchemes![secKey]
+      const { className, handlerName, policies } = manageFunctionMetadata<
+      FunctionMetadata & PoliciesMetadata
+      >(sec).get()
+      const handler = `index.${handlerName}`
+      const functionName = className
+      const lambdaRole = new iam.Role(this, `func-${functionName}-role`, {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      })
+      const logPolicy: Policy = {
+        inlinePolicy: {
+          actions: ['logs:*'],
+          effect: 'Allow',
+          resources: [
+            `arn:aws:logs:${this.region}:${
+              this.account
+            }:log-group:/aws/lambda/${resourceName(
+              this.options,
+              functionName,
+              true,
+            )}:*`,
+          ],
+        },
+      }
+      for (const policy of (policies ?? []).concat([logPolicy])) {
+        if ('managedPolicy' in policy) {
+          lambdaRole.addManagedPolicy(
+            iam.ManagedPolicy.fromAwsManagedPolicyName(policy.managedPolicy),
+          )
+        }
+        if ('inlinePolicy' in policy) {
+          lambdaRole.attachInlinePolicy(
+            new iam.Policy(
+              this,
+              `policy-${functionName}-${policies.indexOf(policy)}`,
+              {
+                document: new iam.PolicyDocument({
+                  statements: [
+                    new iam.PolicyStatement({
+                      actions: policy.inlinePolicy.actions,
+                      effect: policy.inlinePolicy.effect as any,
+                      resources: policy.inlinePolicy.resources,
+                    }),
+                  ],
+                }),
+              },
+            ),
+          )
+        }
+      }
+      new lambda.Function(this, resourceName(this.options, functionName), {
+        handler,
+        runtime: lambda.Runtime.NODEJS_12_X,
+        description: `deployed on: ${new Date().toISOString()}`,
+        functionName: resourceName(this.options, functionName, true),
+        code: lambda.Code.fromBucket(
+          this.bucket!,
+          `${this.options.packageName ?? ''}-${
+            this.options.packageVersion ?? ''
+          }/${functionName}.zip`,
+          undefined,
+        ),
+        currentVersionOptions: {
+          removalPolicy: cdk.RemovalPolicy.RETAIN,
+          retryAttempts: 1,
+        },
+        environment: {
+          STAGE: this.options.stage,
+        },
+        role: lambdaRole,
+        memorySize: 128,
+        reservedConcurrentExecutions: undefined,
+        timeout: cdk.Duration.seconds(10),
+      })
+    }
   }
 
   private createSeedFunction () {

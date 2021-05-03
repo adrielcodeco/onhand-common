@@ -12,14 +12,11 @@ import { OpenAPIV3 } from 'openapi-types'
 import { Options, resourceName } from '#/app/options'
 import { isHttpMethod, manageFunctionMetadata } from '@onhand/openapi'
 
-type FunctionsType = Array<{ function: lambda.Function, functionName: string }>
-
 @Service()
 export class ApiGatewayStack extends cdk.Stack {
   private readonly options: Options
   private readonly openapi: OpenAPIV3.Document
   private readonly bucket?: s3.IBucket
-  private readonly functions: FunctionsType
   private apiResource!: apigateway.IResource
   private apiGatewayRole!: iam.Role
   private api!: apigateway.RestApi
@@ -37,7 +34,6 @@ export class ApiGatewayStack extends cdk.Stack {
 
     this.options = options
     this.openapi = Container.get<OpenAPIV3.Document>('openapi')
-    this.functions = Container.get<FunctionsType>('functions')
     const s3AssetsArn = Container.get<string>('s3-api')
     this.bucket = s3.Bucket.fromBucketArn(
       this,
@@ -152,45 +148,16 @@ export class ApiGatewayStack extends cdk.Stack {
         continue
       }
       const sec = this.openapi.components?.securitySchemes![secKey]
-      const { className, handlerName } = manageFunctionMetadata(sec).get()
-      const handler = `index.${handlerName}`
+      const { className } = manageFunctionMetadata(sec).get()
       const functionName = className
-      const lambdaARole = new iam.Role(this, `func-${functionName}-role`, {
-        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
-      })
-      lambdaARole.addManagedPolicy(
-        iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess'),
-      )
-      lambdaARole.addManagedPolicy(
-        iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
-      )
-      const authorizerFunc = new lambda.Function(
+      const authorizerFunc = lambda.Function.fromFunctionArn(
         this,
         resourceName(this.options, functionName),
-        {
-          handler,
-          runtime: lambda.Runtime.NODEJS_12_X,
-          description: `deployed on: ${new Date().toISOString()}`,
-          functionName: resourceName(this.options, functionName),
-          code: lambda.Code.fromBucket(
-            this.bucket!,
-            `${this.options.packageName ?? ''}-${
-              this.options.packageVersion ?? ''
-            }/${functionName}.zip`,
-            undefined,
-          ),
-          currentVersionOptions: {
-            removalPolicy: cdk.RemovalPolicy.RETAIN,
-            retryAttempts: 1,
-          },
-          environment: {
-            STAGE: this.options.stage,
-          },
-          role: lambdaARole,
-          memorySize: 128,
-          reservedConcurrentExecutions: undefined,
-          timeout: cdk.Duration.seconds(10),
-        },
+        `arn:aws:lambda:${this.region}:${this.account}:function:${resourceName(
+          this.options,
+          functionName,
+          true,
+        )}`,
       )
       this.createAuthAuthorizers(className, authorizerFunc)
     }
@@ -198,7 +165,7 @@ export class ApiGatewayStack extends cdk.Stack {
 
   private createAuthAuthorizers (
     authorizer: string,
-    authorizerFunction: lambda.Function,
+    authorizerFunction: lambda.IFunction,
   ) {
     const authorizerName = resourceName(
       this.options,
@@ -270,12 +237,18 @@ export class ApiGatewayStack extends cdk.Stack {
     functionName: string,
     authorizer: string,
   ) {
-    const routeLambda = this.functions.find(
-      f => f.functionName === functionName,
-    )!
+    const routeLambda = lambda.Function.fromFunctionArn(
+      this,
+      `func-${functionName}`,
+      `arn:aws:lambda:${this.region}:${this.account}:function:${resourceName(
+        this.options,
+        functionName,
+        true,
+      )}`,
+    )
     resource.addMethod(
       method,
-      new apigateway.LambdaIntegration(routeLambda.function, {
+      new apigateway.LambdaIntegration(routeLambda, {
         proxy: true,
         allowTestInvoke: true,
       }),
