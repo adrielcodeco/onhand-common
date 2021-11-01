@@ -32,7 +32,7 @@
     "axios": "^0.21.1",
     "class-validator": "^0.13.1",
     "cls-hooked": "^4.2.2",
-    "inversify": "^5.0.5",
+    "inversify": "^6.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.27.0",
     "node-cache": "^5.1.2",

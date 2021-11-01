@@ -28,7 +28,7 @@
   "dependencies": {
     "@onhand/common-business": "^1.0.56",
     "@onhand/common-domain-aws": "^1.0.56",
-    "inversify": "^5.0.5"
+    "inversify": "^6.0.1"
   },
   "jest": {
     "globals": {
