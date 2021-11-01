@@ -39,7 +39,7 @@
     "class-validator": "^0.13.1",
     "cross-fetch": "^3.0.6",
     "dynamoose": "^2.7.0",
-    "inversify": "^5.0.5",
+    "inversify": "^6.0.1",
     "inversify-binding-decorators": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.4",
