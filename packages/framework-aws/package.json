@@ -33,7 +33,7 @@
     "@onhand/openapi": "^1.0.56",
     "@onhand/utils": "^1.0.56",
     "accesscontrol": "^2.2.1",
-    "amazon-cognito-identity-js": "^4.5.12",
+    "amazon-cognito-identity-js": "^6.0.1",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.858.0",
     "class-validator": "^0.13.1",
